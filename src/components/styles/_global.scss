@@ -1,0 +1,39 @@
+@import 'colors';
+@import 'fonts';
+
+body {
+  margin: 0;
+  font-family: $font-regular;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  text-decoration: none;
+  color: $black;
+
+  &:hover {
+    color: $black-light;
+  }
+
+  &:active, &.active {
+    color: $black-dark;
+  }
+}
+
+tr {
+  td {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+
+    &:first-child {
+      font-weight: 600;
+      padding-right: 20px;
+    }
+  }
+
+  th {
+    padding: 10px 20px;
+    padding-left: 0;
+  }
+}

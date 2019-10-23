@@ -2,17 +2,18 @@
   "name": "reactive-portfolio",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "react": "^16.11.0",
-    "react-dom": "^16.11.0",
-    "react-scripts": "3.2.0"
-  },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start:client": "react-scripts start",
+    "build:client": "react-scripts build",
+    "test:client": "react-scripts test",
+    "eject:client": "react-scripts eject",
+    "start:server": "node build_server",
+    "build:server": "tsc -p server",
+    "prestart": "yarn build:server",
+    "start": "concurrently \"yarn start:server\" \"yarn start:client\"",
+    "build": "yarn build:server && yarn build:client"
   },
+  "proxy": "http://localhost:9000",
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -27,5 +28,31 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.25",
+    "@fortawesome/free-brands-svg-icons": "^5.11.2",
+    "@fortawesome/free-solid-svg-icons": "^5.11.2",
+    "@fortawesome/react-fontawesome": "^0.1.7",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.2.0",
+    "stripe": "^7.10.0",
+    "typescript": "3.6.4"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.17.1",
+    "@types/express": "^4.17.1",
+    "@types/jest": "24.0.19",
+    "@types/node": "12.11.5",
+    "@types/react": "16.9.9",
+    "@types/react-dom": "16.9.2",
+    "@types/react-router-dom": "^5.1.0",
+    "@types/stripe": "^7.10.6",
+    "concurrently": "^5.0.0",
+    "jest": "^24.9.0"
   }
 }
