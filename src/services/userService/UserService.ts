@@ -1,5 +1,6 @@
 import Cookies from "js-cookie";
 import IUser from "./IUser";
+import React from "react";
 
 class UserService {
   private static _instance: UserService;
