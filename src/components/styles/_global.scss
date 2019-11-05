@@ -1,5 +1,6 @@
 @import 'colors';
 @import 'fonts';
+@import 'reactTags';
 
 body {
   margin: 0;
@@ -36,4 +37,12 @@ tr {
     padding: 10px 20px;
     padding-left: 0;
   }
+}
+
+textarea {
+  width: 100%;
+  border: 2px solid $grey-light;
+  padding: 5px;
+  font-family: $font-regular;
+  resize: none;
 }

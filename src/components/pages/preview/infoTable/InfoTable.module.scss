@@ -1,0 +1,51 @@
+@import "../../../styles/";
+
+.container {
+  margin-bottom: 30px;
+  position: relative;
+
+  .buttons {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    .button {
+      cursor: pointer;
+      padding: 3px;
+      color: $black;
+
+      &:hover {
+        color: $black-light;
+      }
+    }
+  }
+
+  .description {
+    white-space: pre-wrap;
+    margin-bottom: 5px;
+  }
+
+  .tags {
+    margin-top: 5px;
+    display: flex;
+    flex-wrap: wrap;
+
+    .tag {
+      $tag-color: #5993ff33;
+
+      background-color: $tag-color;
+      padding: 3px;
+      margin-bottom: 6px;
+      margin-right: 5px;
+      font-weight: 500;
+
+      cursor: pointer;
+
+      text-transform: uppercase;
+
+      &:hover {
+        background-color: lighten($tag-color, 10%);
+      }
+    }
+  }
+}

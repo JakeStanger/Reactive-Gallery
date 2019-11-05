@@ -1,0 +1,54 @@
+@import "../styles";
+
+.container {
+  padding: 10px;
+
+  .label {
+    font-weight: 500;
+    font-size: 1.2rem;
+    padding-left: 4px;
+    margin-top: 10px;
+  }
+
+  .name {
+    width: 100%;
+    border: 2px solid $grey-light;
+    padding: 5px;
+    font-family: $font-regular;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+
+    button {
+      margin-top: 20px;
+      border: 1px solid $grey-light;
+      padding: 10px 20px;
+
+      font-family: $font-regular;
+      font-size: 1.15rem;
+
+      cursor: pointer;
+
+      &.save {
+        background-color: $black;
+        color: $white;
+
+        &:hover {
+          background-color: $black-light;
+        }
+      }
+
+      &.delete {
+        margin-left: 10px;
+        background-color: $white;
+        color: $black;
+
+        &:hover {
+          background-color: $grey-light;
+        }
+      }
+    }
+  }
+}

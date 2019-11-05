@@ -1,0 +1,12 @@
+@import "../../../../styles/";
+
+.search {
+  margin-right: 10px;
+
+  input {
+    height: 42px;
+    border-radius: 0;
+    border: 1px solid $white-dark;
+    padding-left: 10px;
+  }
+}

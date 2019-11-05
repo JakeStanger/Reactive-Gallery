@@ -1,0 +1,108 @@
+@import "../../../../styles/";
+
+.visibility {
+  display: flex;
+  // flex-wrap: wrap;
+
+  .moreBtn {
+    margin-right: 10px;
+    width: 90px;
+    height: 46px;
+
+    border: 1px solid $white-dark;
+    background-color: $white;
+    cursor: pointer;
+
+    &::focus {
+      outline: none;
+    }
+
+    &::-moz-focus-inner {
+      border: 0;
+    }
+
+    .label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 400;
+
+      > div {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+    }
+  }
+
+  .more {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+
+    .checkboxContainer {
+      display: block;
+      position: relative;
+      padding-left: 35px;
+      margin-bottom: 12px;
+      margin-right: 10px;
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+
+      @media screen and (max-width: 570px) {
+        min-width: 128px;
+      }
+
+      label {
+        cursor: pointer;
+      }
+
+      input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+
+        &:checked ~ .checkbox {
+          background-color: $black;
+
+          &:after {
+            display: block;
+          }
+        }
+      }
+
+      .checkbox {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: $white-dark;
+
+        &:after {
+          content: "";
+          position: absolute;
+          display: none;
+
+          left: 9px;
+          top: 5px;
+          width: 5px;
+          height: 10px;
+          border: solid $white;
+          border-width: 0 3px 3px 0;
+          -webkit-transform: rotate(45deg);
+          -ms-transform: rotate(45deg);
+          transform: rotate(45deg);
+        }
+      }
+
+      &:hover input ~ .checkbox {
+        background-color: $black-light;
+      }
+    }
+  }
+}

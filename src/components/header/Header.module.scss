@@ -1,4 +1,4 @@
-@import "../../styles/";
+@import "../styles/";
 
 .header {
   background-color: $grey-light;
@@ -6,6 +6,14 @@
 
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+
+  @media screen and (max-width: 344px) {
+    .left, .right {
+      display: flex;
+      flex-direction: column;
+    }
+  }
 
   .link {
     padding: 5px;

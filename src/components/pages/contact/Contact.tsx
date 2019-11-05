@@ -15,19 +15,19 @@ const Contact: React.FC = () => (
         </a>
       </div>
       <div className={styles.link}>
-        <a href="https://www.facebook.com/RogerStangerPhotography" target="_blank">
+        <a href="https://www.facebook.com/RogerStangerPhotography" target="_blank" rel="noopener noreferrer">
           <FontAwesomeIcon icon={faFacebook} style={{ width: "unset" }} />
           <div className={styles.label}>Facebook</div>
         </a>
       </div>
       <div className={styles.link}>
-        <a href="https://www.instagram.com/rogerstangerphotography" target="_blanl">
+        <a href="https://www.instagram.com/rogerstangerphotography" target="_blank" rel="noopener noreferrer">
           <FontAwesomeIcon icon={faInstagram} style={{ width: "unset" }} />
           <div className={styles.label}>Instagram</div>
         </a>
       </div>
       <div className={styles.link}>
-        <a href="https://paypal.me/rstangerphotos" target="_blank">
+        <a href="https://paypal.me/rstangerphotos" target="_blank" rel="noopener noreferrer">
           <FontAwesomeIcon icon={faPaypal} style={{ width: "unset" }} />
           <div className={styles.label}>PayPal</div>
         </a>
