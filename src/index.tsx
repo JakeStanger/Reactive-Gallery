@@ -13,7 +13,7 @@ const hasPermission = (user: IUser | null, permissions: Partial<IPermissionSet>)
   }
 
   return true;
-}
+};
 
 const userService = new UserService();
 userService.init().then(async () => {
