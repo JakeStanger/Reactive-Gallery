@@ -3,6 +3,7 @@ import Contact from "../components/pages/contact/Contact";
 import Pricing from "../components/pages/pricing/Pricing";
 import Gallery from "../components/pages/gallery/Gallery";
 import Upload from "../components/pages/upload/Upload";
+import Events from "../components/pages/events/Events";
 
 const routes: IRoute[] = [
   {
@@ -20,6 +21,11 @@ const routes: IRoute[] = [
     name: "Pricing",
     path: "/pricing",
     component: Pricing
+  },
+  {
+    name: "Events",
+    path: "/events",
+    component: Events
   },
   {
     name: "Upload",
