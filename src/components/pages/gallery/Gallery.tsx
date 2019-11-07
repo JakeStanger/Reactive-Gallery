@@ -12,7 +12,7 @@ import { DateTime } from "luxon";
 import SettingsService from "../../../services/settingsService/SettingsService";
 
 class Gallery extends React.PureComponent<{}, IGalleryState> {
-  private _imageService: ImageService;
+  private readonly _imageService: ImageService;
   private _settingsService: SettingsService;
 
   constructor(props: {}) {
@@ -50,7 +50,9 @@ class Gallery extends React.PureComponent<{}, IGalleryState> {
   public componentDidMount() {
     this._imageService
       .getAll()
-      .then(images => this.setState({ images }, () => this.setState({ loading: false })));
+      .then(images =>
+        this.setState({ images }, () => this.setState({ loading: false }))
+      );
 
     window.addEventListener("resize", this._updateWidth);
   }
@@ -95,9 +97,10 @@ class Gallery extends React.PureComponent<{}, IGalleryState> {
             .diff(DateTime.fromISO(b))
             .as("months");
         default:
-          return (a !== "null" && a !== "No Location" ? a : "zzz").localeCompare(
-            b !== "null" && b !== "No Location" ? b : "zzz"
-          );
+          return (a !== "null" && a !== "No Location"
+            ? a
+            : "zzz"
+          ).localeCompare(b !== "null" && b !== "No Location" ? b : "zzz");
       }
     });
   }
@@ -109,10 +112,13 @@ class Gallery extends React.PureComponent<{}, IGalleryState> {
       image =>
         !query ||
         (image.name && image.name.toLowerCase().indexOf(query) > -1) ||
-        (image.location && image.location.name.toLowerCase().indexOf(query) > -1) ||
-        (image.description && image.description.toLowerCase().indexOf(query) > -1) ||
+        (image.location &&
+          image.location.name.toLowerCase().indexOf(query) > -1) ||
+        (image.description &&
+          image.description.toLowerCase().indexOf(query) > -1) ||
         (image.tags &&
           image.tags
+            .map(t => t.name)
             .join("")
             .toLowerCase()
             .indexOf(query) > -1)
