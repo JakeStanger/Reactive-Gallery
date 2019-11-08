@@ -16,7 +16,7 @@ class UserService {
   }
 
   public async init() {
-    if (this.isLoggedIn()) this.getCurrentUser();
+    if (this.isLoggedIn()) await this.getCurrentUser();
   }
 
   public getToken() {
