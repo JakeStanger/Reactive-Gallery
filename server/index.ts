@@ -9,6 +9,7 @@ import User from "./models/User";
 import Image from "./models/Image";
 import Location from "./models/Location";
 import Tag from "./models/Tag";
+import Event from "./models/Event";
 import tokenChecker from "./tokenChecker";
 import { getTags } from "./routes/tag/Tags";
 import { getLocations } from "./routes/location/Locations";
@@ -22,6 +23,8 @@ import {
   getImageMarked
 } from "./routes/image/Image";
 import { login, signup, getUser } from "./routes/user/User";
+import { getEvents } from "./routes/event/Events";
+import { deleteEvent, patchEvent, postEvent } from "./routes/event/Event";
 
 Database.get()
   .init()
@@ -30,6 +33,7 @@ Database.get()
     Image.load();
     Location.load();
     Tag.load();
+    Event.load();
 
     Image.belongsTo(Location, { foreignKey: "location_key", as: "location" });
     Image.belongsToMany(Tag, {
@@ -110,6 +114,24 @@ router.get("/tag", async (req, res) => await routeFunc(req, res, getTags));
 router.get(
   "/location",
   async (req, res) => await routeFunc(req, res, getLocations)
+);
+
+router.get("/event", async (req, res) => await routeFunc(req, res, getEvents));
+
+router.post(
+  "/event/:id",
+  tokenChecker,
+  async (req, res) => await routeFunc(req, res, postEvent)
+);
+router.patch(
+  "/event/:id",
+  tokenChecker,
+  async (req, res) => await routeFunc(req, res, patchEvent)
+);
+router.delete(
+  "/event/:id",
+  tokenChecker,
+  async (req, res) => await routeFunc(req, res, deleteEvent)
 );
 
 router.post("/login", async (req, res) => await routeFunc(req, res, login));
