@@ -7,8 +7,8 @@ class ImageService {
 
   private _userService: UserService;
 
-  constructor() {
-    this._userService = new UserService();
+  private constructor() {
+    this._userService = UserService.getInstance();
   }
 
   public static getInstance(): ImageService {
