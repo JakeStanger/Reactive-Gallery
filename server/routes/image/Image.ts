@@ -34,7 +34,7 @@ export const patchImageInfo = async (req: Request, res: Response) => {
 
 
   const user = await User.findOne({ where: { id: (req.user as any).id } });
-  if (user.canEdit) {
+  if (!user.canEdit) {
     res.status(401).json({ message: "Missing edit permissions" });
   }
 
@@ -62,7 +62,10 @@ export const patchImageInfo = async (req: Request, res: Response) => {
 };
 
 export const deleteImage = async (req: Request, res: Response) => {
-  console.log(req.params);
+  const user = await User.findOne({ where: { id: (req.user as any).id } });
+  if (!user.canUpload) {
+    res.status(401).json({ message: "Missing upload permissions" });
+  }
 
   await Image.update(
     { deleted: true },
@@ -76,7 +79,7 @@ export const postImage = async (req: Request, res: Response) => {
   imageData.filename = req.file.originalname;
 
   const user = await User.findOne({ where: { id: (req.user as any).id } });
-  if (user.canUpload) {
+  if (!user.canUpload) {
     res.status(401).json({ message: "Missing upload permissions" });
   }
 
