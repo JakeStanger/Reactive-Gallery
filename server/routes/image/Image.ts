@@ -98,7 +98,7 @@ export const postImage = async (req: Request, res: Response) => {
   const image = await Image.create(imageData);
 
   if (imageData.location) {
-    const location = await Location.getFromObject(image.location);
+    const location = await Location.getFromObject(imageData.location);
     await image.setLocation(location);
   }
 
