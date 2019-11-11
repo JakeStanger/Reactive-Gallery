@@ -18,7 +18,6 @@ export async function generateMarked(buffer: Buffer, filename: string) {
           __dirname,
           "../",
           "../",
-          "../",
           "resources",
           "overlay.png"
         ),
