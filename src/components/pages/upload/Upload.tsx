@@ -7,7 +7,6 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import "filepond/dist/filepond.min.css";
 
 import IUploadState from "./IUploadState";
-import ImageService from "../../../services/imageService/ImageService";
 import EditForm from "../../editForm/EditForm";
 
 import { startCase } from "lodash";
@@ -16,15 +15,12 @@ registerPlugin(FilePondImagePreview);
 registerPlugin(FilePondValidateType);
 
 class Upload extends React.Component<{}, IUploadState> {
-  private _imageService: ImageService;
 
   constructor(props: {}) {
     super(props);
     this.state = {
       file: null
     };
-
-    this._imageService = ImageService.getInstance();
   }
 
   private _onUpload = async (
@@ -65,6 +61,7 @@ class Upload extends React.Component<{}, IUploadState> {
             image={{ filename: file.name, name: startCase(file.name.split(".")[0]) }}
             mode="upload"
             file={file}
+            onError={errorMsg => this.setState(({error: errorMsg}))}
           />
         )}
       </div>

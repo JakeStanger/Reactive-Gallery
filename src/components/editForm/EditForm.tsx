@@ -70,13 +70,14 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
     const { name, description, location, tags } = this.state;
 
     if (mode === "upload" && file) {
-      await this._imageService.upload(file, {
+      const res = await this._imageService.upload(file, {
         name,
         description,
         location: location ? location[0] : null,
         tags
       });
-      window.location.href = "/";
+      if((res as {msg: string}).msg && this.props.onError) this.props.onError((res as {msg: string}).msg);
+      else window.location.href = "/";
     } else {
       await this._imageService.update({
         filename: image.filename,
