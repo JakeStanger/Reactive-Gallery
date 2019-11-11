@@ -10,13 +10,6 @@ export async function generateThumbnail(buffer: Buffer, filename: string) {
 }
 
 export async function generateMarked(buffer: Buffer, filename: string) {
-    console.log(path.join(
-          __dirname,
-          "../",
-          "../",
-          "resources",
-          "overlay.png"));
-
   await sharp(buffer)
     .jpeg({ quality: 100 })
     .composite([
