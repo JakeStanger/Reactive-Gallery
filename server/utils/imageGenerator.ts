@@ -17,6 +17,7 @@ export async function generateMarked(buffer: Buffer, filename: string) {
         input: path.join(
           __dirname,
           "../",
+          "../",
           "resources",
           "overlay.png"
         ),
