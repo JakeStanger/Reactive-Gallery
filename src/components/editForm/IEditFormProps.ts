@@ -6,7 +6,7 @@ interface IEditFormProps {
   mode: "upload" | "edit";
   file?: File;
 
-  onError: (error: string) => void;
+  onError?: (error: string) => void;
 }
 
 export default IEditFormProps;
