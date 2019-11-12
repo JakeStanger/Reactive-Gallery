@@ -106,7 +106,7 @@ class Gallery extends React.PureComponent<{}, IGalleryState> {
   }
 
   private _getFilteredImages(images: IImage[]) {
-    const { query } = this.state;
+    const query = this.state.query.toLowerCase();
 
     return images.filter(
       image =>
