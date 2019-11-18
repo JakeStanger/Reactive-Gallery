@@ -25,6 +25,8 @@ import {
 import { login, signup, getUser } from "./routes/user/User";
 import { getEvents } from "./routes/event/Events";
 import { deleteEvent, patchEvent, postEvent } from "./routes/event/Event";
+import PriceGroup from "./models/PriceGroup";
+import Price from "./models/Price";
 
 Database.get()
   .init()
@@ -33,7 +35,10 @@ Database.get()
     Image.load();
     Location.load();
     Tag.load();
+
     Event.load();
+    PriceGroup.load();
+    Price.load();
 
     Image.belongsTo(Location, { foreignKey: "location_key", as: "location" });
     Image.belongsToMany(Tag, {
@@ -48,6 +53,8 @@ Database.get()
       as: "images",
       constraints: false
     });
+
+    Price.belongsTo(PriceGroup, {foreignKey: "price_group_id", as: "priceGroup"})
   });
 
 const app = express();
