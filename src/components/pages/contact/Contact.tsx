@@ -2,7 +2,11 @@ import React from "react";
 import styles from "./Contact.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import { faPaypal, faFacebook, faInstagram } from "@fortawesome/free-brands-svg-icons";
+import {
+  faPaypal,
+  faFacebook,
+  faInstagram
+} from "@fortawesome/free-brands-svg-icons";
 import config from "../../../config.json";
 
 const Contact: React.FC = () => (
@@ -16,23 +20,42 @@ const Contact: React.FC = () => (
         </a>
       </div>
       <div className={styles.link}>
-        <a href={config.contact.facebook} target="_blank" rel="noopener noreferrer">
+        <a
+          href={config.contact.facebook}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <FontAwesomeIcon icon={faFacebook} style={{ width: "unset" }} />
           <div className={styles.label}>Facebook</div>
         </a>
       </div>
       <div className={styles.link}>
-        <a href={config.contact.instagram} target="_blank" rel="noopener noreferrer">
+        <a
+          href={config.contact.instagram}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <FontAwesomeIcon icon={faInstagram} style={{ width: "unset" }} />
           <div className={styles.label}>Instagram</div>
         </a>
       </div>
       <div className={styles.link}>
-        <a href={config.contact.paypal} target="_blank" rel="noopener noreferrer">
+        <a
+          href={config.contact.paypal}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <FontAwesomeIcon icon={faPaypal} style={{ width: "unset" }} />
           <div className={styles.label}>PayPal</div>
         </a>
       </div>
+    </div>
+    <div className={styles.text}>
+      Email <a href={"mailto:" + config.contact.email}>{config.contact.email}</a>. Find us
+      on <a href={config.contact.facebook}>Facebook</a> and{" "}
+      <a href={config.contact.instagram}>Instagram</a> as rstangerphotography. We'll
+      respond fastest through Facebook but will endeavor to respond as
+      fast as possible.
     </div>
   </div>
 );

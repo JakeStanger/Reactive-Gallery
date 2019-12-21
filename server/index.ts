@@ -27,6 +27,8 @@ import { getEvents } from "./routes/event/Events";
 import { deleteEvent, patchEvent, postEvent } from "./routes/event/Event";
 import PriceGroup from "./models/PriceGroup";
 import Price from "./models/Price";
+import { getPrices, getPricesForGroup } from "./routes/price/Prices";
+import { getPriceGroups } from "./routes/priceGroup/PriceGroups";
 
 Database.get()
   .init()
@@ -46,6 +48,10 @@ Database.get()
       foreignKey: "image_id",
       as: "tags"
     });
+    Image.belongsTo(PriceGroup, {
+      foreignKey: "price_group_id",
+      as: "priceGroup"
+    });
 
     Tag.belongsToMany(Image, {
       through: "image_tag",
@@ -54,7 +60,10 @@ Database.get()
       constraints: false
     });
 
-    Price.belongsTo(PriceGroup, {foreignKey: "price_group_id", as: "priceGroup"})
+    Price.belongsTo(PriceGroup, {
+      foreignKey: "price_group_id",
+      as: "priceGroup"
+    });
   });
 
 const app = express();
@@ -139,6 +148,16 @@ router.delete(
   "/event/:id",
   tokenChecker,
   async (req, res) => await routeFunc(req, res, deleteEvent)
+);
+
+router.get("/price", async (req, res) => await routeFunc(req, res, getPrices));
+router.get(
+  "/price/group/:groupId",
+  async (req, res) => await routeFunc(req, res, getPricesForGroup)
+);
+router.get(
+  "/pricegroup",
+  async (req, res) => await routeFunc(req, res, getPriceGroups)
 );
 
 router.post("/login", async (req, res) => await routeFunc(req, res, login));

@@ -1,5 +1,6 @@
 import ILocation from "./ILocation";
 import ITag from "./ITag";
+import IPriceGroup from "../priceService/IPriceGroup";
 
 interface IImage {
   description: string;
@@ -15,6 +16,7 @@ interface IImage {
   aperture: number;
   iso: number;
   cameraModel: string;
+  priceGroup: IPriceGroup;
 }
 
 export default IImage;

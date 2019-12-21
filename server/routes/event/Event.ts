@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import Event from "../../models/Event";
 import User from "../../models/User";
-import Image from "../../models/Image";
 
 export const postEvent = async (req: Request, res: Response) => {
   if (!req.body || !req.body.name)

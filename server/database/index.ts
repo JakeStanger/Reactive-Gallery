@@ -24,6 +24,9 @@ class Database {
     const db = new Sequelize(settings.database, settings.username, settings.password, {
       host: settings.host,
       dialect: /*settings.dialect as Dialect*/"mariadb",
+      dialectOptions: {
+        timezone: 'Etc/GMT0'
+      },
       define: {
         timestamps: false,
         underscored: true

@@ -6,6 +6,7 @@ import config from "../../config.json";
 import * as imageGenerator from "../../utils/imageGenerator";
 import * as exifReader from "../../utils/exifReader";
 import User from "../../models/User";
+import PriceGroup from "../../models/PriceGroup";
 
 export const getImageThumbnail = async (req: Request, res: Response) => {
   return res
@@ -22,7 +23,11 @@ export const getImageMarked = async (req: Request, res: Response) => {
 export const getImageInfo = async (req: Request, res: Response) => {
   const image = await Image.findOne({
     where: { filename: req.params.filename },
-    include: [{ model: Location, as: "location" }, { model: Tag, as: "tags" }]
+    include: [
+      { model: Location, as: "location" },
+      { model: Tag, as: "tags" },
+      { model: PriceGroup, as: "priceGroup" }
+    ]
   });
 
   return res.json(image);
@@ -31,7 +36,6 @@ export const getImageInfo = async (req: Request, res: Response) => {
 export const patchImageInfo = async (req: Request, res: Response) => {
   if (!req.body || !Object.keys(req.body).length)
     res.status(400).json({ message: "Missing request body" });
-
 
   const user = await User.findOne({ where: { id: (req.user as any).id } });
   if (!user.canEdit) {

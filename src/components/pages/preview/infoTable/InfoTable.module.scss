@@ -1,8 +1,18 @@
-@import "../../../styles/";
+@import "../../../styles";
 
 .container {
   margin-bottom: 30px;
   position: relative;
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    & > div {
+      flex: 1;
+    }
+  }
 
   .buttons {
     position: absolute;

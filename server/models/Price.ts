@@ -21,13 +21,16 @@ class Price extends Model {
           allowNull: false,
           unique: true
         },
+        unframed: {
+          type: DataTypes.FLOAT
+        },
         framed: {
-          type: DataTypes.BOOLEAN,
+          type: DataTypes.FLOAT,
         }
       },
       {
         sequelize: Database.getConnection(),
-        tableName: "price_group"
+        tableName: "price"
       }
     );
   }

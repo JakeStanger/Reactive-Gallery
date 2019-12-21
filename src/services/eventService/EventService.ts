@@ -1,14 +1,7 @@
-import UserService from "../userService/UserService";
 import IEvent from "./IEvent";
 
 class EventService {
-    private static _instance: EventService;
-
-  private _userService: UserService;
-
-  private constructor() {
-    this._userService = UserService.getInstance();
-  }
+  private static _instance: EventService;
 
   public static getInstance(): EventService {
     if (EventService._instance) return EventService._instance;
@@ -25,8 +18,8 @@ class EventService {
     if (events && !(events as any).message) {
       return events;
     } else {
-        console.error(events);
-        return [];
+      console.error(events);
+      return [];
     }
   }
 }
