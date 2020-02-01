@@ -108,6 +108,7 @@ const InfoTable: React.FC<IInfoTableProps> = ({ image, user }) => {
               prices={prices || []}
               image={image}
               purchaseMode={UserService.getInstance().isLoggedIn()}
+              className={styles.pushRight}
             />
           </div>
         )}

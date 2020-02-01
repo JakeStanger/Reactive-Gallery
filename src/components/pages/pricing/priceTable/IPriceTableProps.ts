@@ -7,6 +7,7 @@ interface IPriceTableProps {
   prices: IPrice[];
   purchaseMode?: boolean;
   image?: IImage;
+  className?: string;
 }
 
 export default IPriceTableProps;

@@ -8,10 +8,11 @@ const PriceTable: React.FC<IPriceTableProps> = ({
   group,
   prices,
   image,
-  purchaseMode
+  purchaseMode,
+  className
 }) => {
   return (
-    <table>
+    <table className={className}>
       <thead>
         <tr className={styles.tableRow}>
           {group.name !== "Other" ? (

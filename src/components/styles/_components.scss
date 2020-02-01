@@ -31,3 +31,10 @@
 
   font-size: 1.4rem;
 }
+
+@media screen and (min-width: 500px) {
+  .pushRight {
+    margin-left: auto;
+  }
+}
+
