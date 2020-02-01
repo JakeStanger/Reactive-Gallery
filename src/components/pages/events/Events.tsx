@@ -43,6 +43,7 @@ const Events: React.FC = () => {
             ))}
         </tbody>
       </table>
+      {!(events && events.length) && <div className={styles.subSubTitle}>There are currently no upcoming events</div>}
     </div>
   );
 };
