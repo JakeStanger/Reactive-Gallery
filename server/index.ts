@@ -40,10 +40,12 @@ import {
   getClientSecret
 } from "./routes/checkout/Checkout";
 import { handleStripeWebhook } from "./routes/webhook/Webhook";
+import morgan from "morgan";
 import * as dotenv from "dotenv";
 
 dotenv.config();
 
+// Database initialization
 Database.get()
   .init()
   .then(() => {
@@ -100,16 +102,27 @@ Database.get()
   });
 
 const app = express();
-const router = express.Router();
 
-// Use JSON parser for all non-webhook routes
+const router = express.Router();
+app.use("/api", router);
+
+// file uploading middleware
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fieldSize: Number.MAX_VALUE }
+});
+
+// Logging middleware
+app.use(morgan("combined"));
+
+// Use JSON parser middleware for all non-webhook routes
 app.use(
   (
     req: express.Request,
     res: express.Response,
     next: express.NextFunction
   ): void => {
-    if (req.originalUrl === '/api/webhook') {
+    if (req.originalUrl === "/api/webhook") {
       next();
     } else {
       bodyParser.json()(req, res, next);
@@ -117,150 +130,72 @@ app.use(
   }
 );
 
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fieldSize: Number.MAX_VALUE }
-});
-
-app.use("/api", router);
-
-export type RouteFunction = (
-  req: Request,
-  res: Response
-) => Promise<Response | void>;
-const routeFunc = async (req: Request, res: Response, func: RouteFunction) => {
-  try {
-    return await func(req, res);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ msg: "Unknown server error" });
+// Error handling
+app.use(
+  (
+    err: Error,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    console.error(err.stack);
+    res.status(500).send({ error: "An internal server error has occured" });
   }
-};
+);
 
 // images
-router.get("/image", async (req, res) => await routeFunc(req, res, getImages));
-router.post(
-  "/image",
-  tokenChecker,
-  upload.single("file"),
-  async (req, res) => await routeFunc(req, res, postImage)
-);
+router.get("/image", getImages);
+router.post("/image", tokenChecker, upload.single("file"), postImage);
 
-router.get(
-  "/image/thumb/:filename",
-  async (req, res) => await routeFunc(req, res, getImageThumbnail)
-);
+router.get("/image/thumb/:filename", getImageThumbnail);
 
-router.get(
-  "/image/:filename",
-  async (req, res) => await routeFunc(req, res, getImageMarked)
-);
+router.get("/image/:filename", getImageMarked);
 
-router.get(
-  "/image/:filename/info",
-  async (req, res) => await routeFunc(req, res, getImageInfo)
-);
+router.get("/image/:filename/info", getImageInfo);
 
-router.patch(
-  "/image/:filename/info",
-  tokenChecker,
-  async (req, res) => await routeFunc(req, res, patchImageInfo)
-);
+router.patch("/image/:filename/info", tokenChecker, patchImageInfo);
 
-router.delete(
-  "/image/:filename",
-  tokenChecker,
-  async (req, res) => await routeFunc(req, res, deleteImage)
-);
+router.delete("/image/:filename", tokenChecker, deleteImage);
 
 // tags and locations
-router.get("/tag", async (req, res) => await routeFunc(req, res, getTags));
-router.get(
-  "/location",
-  async (req, res) => await routeFunc(req, res, getLocations)
-);
+router.get("/tag", getTags);
+router.get("/location", getLocations);
 
 // events
-router.get("/event", async (req, res) => await routeFunc(req, res, getEvents));
-router.post(
-  "/event/:id",
-  tokenChecker,
-  async (req, res) => await routeFunc(req, res, postEvent)
-);
-router.patch(
-  "/event/:id",
-  tokenChecker,
-  async (req, res) => await routeFunc(req, res, patchEvent)
-);
-router.delete(
-  "/event/:id",
-  tokenChecker,
-  async (req, res) => await routeFunc(req, res, deleteEvent)
-);
+router.get("/event", getEvents);
+router.post("/event/:id", tokenChecker, postEvent);
+router.patch("/event/:id", tokenChecker, patchEvent);
+router.delete("/event/:id", tokenChecker, deleteEvent);
 
 // prices
-router.get("/price", async (req, res) => await routeFunc(req, res, getPrices));
-router.get(
-  "/price/group/:groupId",
-  async (req, res) => await routeFunc(req, res, getPricesForGroup)
-);
-router.get(
-  "/pricegroup",
-  async (req, res) => await routeFunc(req, res, getPriceGroups)
-);
+router.get("/price", getPrices);
+router.get("/price/group/:groupId", getPricesForGroup);
+router.get("/pricegroup", getPriceGroups);
 
 // account
-router.post("/login", async (req, res) => await routeFunc(req, res, login));
-router.post("/signup", async (req, res) => await routeFunc(req, res, signup));
-router.get("/user", tokenChecker, async (req, res) =>
-  routeFunc(req, res, getUser)
-);
+router.post("/login", login);
+router.post("/signup", signup);
+router.get("/user", tokenChecker, getUser);
 
 // basket
-router.get(
-  "/basket",
-  tokenChecker,
-  async (req, res) => await routeFunc(req, res, getBasket)
-);
-router.post(
-  "/basket",
-  tokenChecker,
-  async (req, res) => await routeFunc(req, res, postBasketItem)
-);
-router.delete(
-  "/basket",
-  tokenChecker,
-  async (req, res) => await routeFunc(req, res, clearBasket)
-);
-router.delete(
-  "/basket/:basketItemId",
-  tokenChecker,
-  async (req, res) => await routeFunc(req, res, deleteBasketItem)
-);
+router.get("/basket", tokenChecker, getBasket);
+router.post("/basket", tokenChecker, postBasketItem);
+router.delete("/basket", tokenChecker, clearBasket);
+router.delete("/basket/:basketItemId", tokenChecker, deleteBasketItem);
 
-router.get(
-  "/checkout/public",
-  async (req, res) => await routeFunc(req, res, getClientPublic)
-);
+router.get("/checkout/public", getClientPublic);
 
-router.get(
-  "/checkout/secret",
-  tokenChecker,
-  async (req, res) => await routeFunc(req, res, getClientSecret)
-);
+router.get("/checkout/secret", tokenChecker, getClientSecret);
 
-router.get(
-  "/checkout/session/:sessionId",
-  tokenChecker,
-  async (req, res) => await routeFunc(req, res, getCheckoutSession)
-);
+router.get("/checkout/session/:sessionId", tokenChecker, getCheckoutSession);
 
 router.post(
   "/webhook",
-  bodyParser.raw({type: 'application/json'}),
-  async (req, res) => await routeFunc(req, res, handleStripeWebhook)
+  bodyParser.raw({ type: "application/json" }),
+  handleStripeWebhook
 );
 
+// Auth check error handler
 app.use((err: any, req: any, res: any, next: any) => {
   if (err.name === "UnauthorizedError") {
     res.status(401).json({ msg: err.message });
