@@ -104,7 +104,6 @@ Database.get()
 const app = express();
 
 const router = express.Router();
-app.use("/api", router);
 
 // file uploading middleware
 const upload = multer({
@@ -142,6 +141,10 @@ app.use(
     res.status(500).send({ error: "An internal server error has occured" });
   }
 );
+
+// Add router middleware.
+// This must be done after the app-level middleware!
+app.use("/api", router);
 
 // images
 router.get("/image", getImages);
