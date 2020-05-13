@@ -1,5 +1,4 @@
 import { Sequelize, Dialect } from "sequelize";
-import config from "../config.json"
 
 class Database {
   private static _instance: Database;
@@ -20,17 +19,18 @@ class Database {
   }
 
   public async init() {
-    const settings = config.database;
-    const db = new Sequelize(settings.database, settings.username, settings.password, {
-      host: settings.host,
-      dialect: /*settings.dialect as Dialect*/"mariadb",
+    const settings = process.env;
+    const db = new Sequelize(settings.DATABASE_NAME, settings.DATABASE_USER, settings.DATABASE_PASSWORD, {
+      host: settings.DATABASE_HOST,
+      dialect: settings.DATABASE_DIALIECT as Dialect,
       dialectOptions: {
         timezone: 'Etc/GMT0'
       },
       define: {
         timestamps: false,
         underscored: true
-      }
+      },
+      logging: false
     });
 
     await new Promise((resolve, reject) => {

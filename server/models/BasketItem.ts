@@ -1,15 +1,25 @@
-import { Model, DataTypes } from "sequelize";
+import {
+  Model,
+  DataTypes,
+  BelongsToSetAssociationMixin,
+} from "sequelize";
 import Database from "../database";
 import Image from "./Image";
 import User from "./User";
+import Price from "./Price";
 
 class BasketItem extends Model {
   public id: number;
+  public quantity: number;
+  public framed: boolean;
 
   public image: Image;
   public user: User;
-  public price: BasketItem;
-  public quantity: number;
+  public price: Price;
+
+  public setImage!: BelongsToSetAssociationMixin<Image, "image">;
+  public setUser!: BelongsToSetAssociationMixin<User, "user">;
+  public setPrice!: BelongsToSetAssociationMixin<Price, "price">;
 
   public static load() {
     BasketItem.init(
@@ -19,11 +29,12 @@ class BasketItem extends Model {
           autoIncrement: true,
           primaryKey: true
         },
-        quantity: DataTypes.INTEGER
+        quantity: DataTypes.INTEGER,
+        framed: DataTypes.BOOLEAN
       },
       {
         sequelize: Database.getConnection(),
-        tableName: "price"
+        tableName: "basket_item"
       }
     );
   }

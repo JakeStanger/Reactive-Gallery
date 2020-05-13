@@ -1,0 +1,31 @@
+@import "../../styles/";
+
+.button {
+  margin-top: 20px;
+  border: 1px solid $grey-light;
+  padding: 10px 20px;
+
+  font-family: $font-regular;
+  font-size: 1.15rem;
+
+  cursor: pointer;
+
+  &.primary {
+    background-color: $black;
+    color: $white;
+
+    &:hover {
+      background-color: lighten($black, 4);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    background-color: $white-dark;
+    cursor: unset;
+    
+    &:hover {
+      background-color: $white-dark;
+    }
+  }
+}

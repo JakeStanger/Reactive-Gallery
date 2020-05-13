@@ -5,6 +5,7 @@ class User extends Model {
   public id: number;
 
   public username: string;
+  public email: string;
   public password: string;
 
   public canEdit: boolean;
@@ -21,6 +22,10 @@ class User extends Model {
         username: {
           type: DataTypes.STRING,
           allowNull: false
+        },
+        email: {
+          type: DataTypes.STRING,
+          allowNull: true
         },
         password: {
           type: DataTypes.STRING,

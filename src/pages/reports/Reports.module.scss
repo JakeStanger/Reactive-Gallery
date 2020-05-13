@@ -1,0 +1,10 @@
+@import "../../styles/";
+
+.reports {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  .imageLink {
+    padding: 5px;
+  }
+}

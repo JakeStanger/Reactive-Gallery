@@ -25,3 +25,6 @@ yarn-error.log*
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 server/config.json
+src/config.json
+.env
+src/pageContent/contact/photo.jpg

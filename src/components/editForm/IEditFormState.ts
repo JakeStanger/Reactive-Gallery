@@ -1,5 +1,6 @@
 import ILocation from "../../services/imageService/ILocation";
 import ITag from "../../services/imageService/ITag";
+import IPriceGroup from "../../services/priceService/IPriceGroup";
 
 interface IEditPanelState {
   name: string;
@@ -9,6 +10,9 @@ interface IEditPanelState {
 
   suggestedTags: ITag[];
   suggestedLocations: ILocation[];
+
+  priceGroup: IPriceGroup | undefined;
+  priceGroups: IPriceGroup[];
 }
 
 export default IEditPanelState;

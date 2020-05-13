@@ -1,5 +1,4 @@
 import express, { Request, Response } from "express";
-import config from "./config.json";
 import bodyParser from "body-parser";
 import multer from "multer";
 
@@ -29,6 +28,21 @@ import PriceGroup from "./models/PriceGroup";
 import Price from "./models/Price";
 import { getPrices, getPricesForGroup } from "./routes/price/Prices";
 import { getPriceGroups } from "./routes/priceGroup/PriceGroups";
+import BasketItem from "./models/BasketItem";
+import {
+  deleteBasketItem,
+  postBasketItem
+} from "./routes/basketItem/BasketItem";
+import { clearBasket, getBasket } from "./routes/basketItem/BasketItems";
+import {
+  getCheckoutSession,
+  getClientPublic,
+  getClientSecret
+} from "./routes/checkout/Checkout";
+import { handleStripeWebhook } from "./routes/webhook/Webhook";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 Database.get()
   .init()
@@ -42,12 +56,16 @@ Database.get()
     PriceGroup.load();
     Price.load();
 
+    BasketItem.load();
+
     Image.belongsTo(Location, { foreignKey: "location_key", as: "location" });
+
     Image.belongsToMany(Tag, {
       through: "image_tag",
       foreignKey: "image_id",
       as: "tags"
     });
+
     Image.belongsTo(PriceGroup, {
       foreignKey: "price_group_id",
       as: "priceGroup"
@@ -64,12 +82,40 @@ Database.get()
       foreignKey: "price_group_id",
       as: "priceGroup"
     });
+
+    BasketItem.belongsTo(Image, {
+      foreignKey: "image_id",
+      as: "image"
+    });
+
+    BasketItem.belongsTo(User, {
+      foreignKey: "user_id",
+      as: "user"
+    });
+
+    BasketItem.belongsTo(Price, {
+      foreignKey: "price_id",
+      as: "price"
+    });
   });
 
 const app = express();
 const router = express.Router();
 
-app.use(bodyParser.json());
+// Use JSON parser for all non-webhook routes
+app.use(
+  (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): void => {
+    if (req.originalUrl === '/api/webhook') {
+      next();
+    } else {
+      bodyParser.json()(req, res, next);
+    }
+  }
+);
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -87,10 +133,11 @@ const routeFunc = async (req: Request, res: Response, func: RouteFunction) => {
     return await func(req, res);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Unknown server error" });
+    return res.status(500).json({ msg: "Unknown server error" });
   }
 };
 
+// images
 router.get("/image", async (req, res) => await routeFunc(req, res, getImages));
 router.post(
   "/image",
@@ -126,14 +173,15 @@ router.delete(
   async (req, res) => await routeFunc(req, res, deleteImage)
 );
 
+// tags and locations
 router.get("/tag", async (req, res) => await routeFunc(req, res, getTags));
 router.get(
   "/location",
   async (req, res) => await routeFunc(req, res, getLocations)
 );
 
+// events
 router.get("/event", async (req, res) => await routeFunc(req, res, getEvents));
-
 router.post(
   "/event/:id",
   tokenChecker,
@@ -150,6 +198,7 @@ router.delete(
   async (req, res) => await routeFunc(req, res, deleteEvent)
 );
 
+// prices
 router.get("/price", async (req, res) => await routeFunc(req, res, getPrices));
 router.get(
   "/price/group/:groupId",
@@ -160,19 +209,65 @@ router.get(
   async (req, res) => await routeFunc(req, res, getPriceGroups)
 );
 
+// account
 router.post("/login", async (req, res) => await routeFunc(req, res, login));
 router.post("/signup", async (req, res) => await routeFunc(req, res, signup));
 router.get("/user", tokenChecker, async (req, res) =>
   routeFunc(req, res, getUser)
 );
 
+// basket
+router.get(
+  "/basket",
+  tokenChecker,
+  async (req, res) => await routeFunc(req, res, getBasket)
+);
+router.post(
+  "/basket",
+  tokenChecker,
+  async (req, res) => await routeFunc(req, res, postBasketItem)
+);
+router.delete(
+  "/basket",
+  tokenChecker,
+  async (req, res) => await routeFunc(req, res, clearBasket)
+);
+router.delete(
+  "/basket/:basketItemId",
+  tokenChecker,
+  async (req, res) => await routeFunc(req, res, deleteBasketItem)
+);
+
+router.get(
+  "/checkout/public",
+  async (req, res) => await routeFunc(req, res, getClientPublic)
+);
+
+router.get(
+  "/checkout/secret",
+  tokenChecker,
+  async (req, res) => await routeFunc(req, res, getClientSecret)
+);
+
+router.get(
+  "/checkout/session/:sessionId",
+  tokenChecker,
+  async (req, res) => await routeFunc(req, res, getCheckoutSession)
+);
+
+router.post(
+  "/webhook",
+  bodyParser.raw({type: 'application/json'}),
+  async (req, res) => await routeFunc(req, res, handleStripeWebhook)
+);
+
 app.use((err: any, req: any, res: any, next: any) => {
   if (err.name === "UnauthorizedError") {
-    res.status(401).json({ message: err.message });
+    res.status(401).json({ msg: err.message });
   }
   next(err);
 });
 
-app.listen(config.port, () =>
-  console.log(`Express listening on port ${config.port}`)
+app.listen(process.env.SERVER_PORT, () =>
+  console.log(`Express listening on port ${process.env.SERVER_PORT}`)
 );

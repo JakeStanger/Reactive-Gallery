@@ -1,0 +1,42 @@
+@import "../../../../styles";
+
+.visibility {
+  display: flex;
+  // flex-wrap: wrap;
+
+  .moreBtn {
+    margin-right: 10px;
+    width: 90px;
+    height: 46px;
+
+    border: 1px solid $white-dark;
+    background-color: $white;
+    cursor: pointer;
+
+    &::focus {
+      outline: none;
+    }
+
+    &::-moz-focus-inner {
+      border: 0;
+    }
+
+    .label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 400;
+
+      > div {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+    }
+  }
+
+  .more {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+}

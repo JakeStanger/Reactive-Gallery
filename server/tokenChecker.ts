@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import config from "./config.json";
 import { RequestHandler } from "express";
 
 const tokenChecker: RequestHandler = (req, res, next) => {
@@ -8,9 +7,9 @@ const tokenChecker: RequestHandler = (req, res, next) => {
   // decode token
   if (token) {
     // verifies secret and checks exp
-    jwt.verify(token, config.secret, (err: any, decoded: string) => {
+    jwt.verify(token, process.env.SESSION_SECRET, (err: any, decoded: string) => {
       if (err) {
-        return res.status(401).json({ expired: true, message: "Token expired" });
+        return res.status(401).json({ expired: true, msg: "Token expired" });
       }
 
       (req as any).user = decoded;
@@ -21,7 +20,7 @@ const tokenChecker: RequestHandler = (req, res, next) => {
     // return an error
     return res.status(403).send({
       error: true,
-      message: "No token provided."
+      msg: "No token provided."
     });
   }
 };

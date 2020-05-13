@@ -26,7 +26,7 @@ class Image extends Model {
 
   public setLocation!: BelongsToSetAssociationMixin<Location, "location">;
   public setTags!: BelongsToManySetAssociationsMixin<Tag, "tags">;
-  public setPriceGroup: BelongsToSetAssociationMixin<Price, "priceGroup">;
+  public setPriceGroup: BelongsToSetAssociationMixin<PriceGroup, "priceGroup">;
 
   public readonly location?: Location;
   public readonly tags?: Tag[];

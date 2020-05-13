@@ -1,8 +1,8 @@
 import UserService from "../userService/UserService";
-import IImage from "../imageService/IImage";
+import ICheckoutSession from "./ICheckoutSession";
 
 class CheckoutService {
-    private static _instance: CheckoutService;
+  private static _instance: CheckoutService;
 
   private _userService: UserService;
 
@@ -19,17 +19,32 @@ class CheckoutService {
     }
   }
 
-  public async addToCheckout(image: IImage, quantity: number) {
-    const res = await fetch("/api/checkout", {
-      method: "POST",
-      body: JSON.stringify({image, quantity}),
+  public async getPublicKey(): Promise<string> {
+    const { publicKey } = await fetch("/api/checkout/public").then(r =>
+      r.json()
+    );
+
+    return publicKey;
+  }
+
+  public async getSecretKey(): Promise<string> {
+    const response = await fetch("/api/checkout/secret", {
       headers: {
-        Authorization: `Bearer ${this._userService.getToken()}`,
+        Authorization: `Bearer ${UserService.getInstance().getToken()}`
       }
     });
+    const { sessionId } = await response.json();
 
-    if (res.ok && res.status >= 200 && res.status < 300) return res.json();
-    else return { msg: await res.text() };
+    return sessionId;
+  }
+
+  public async getSession(sessionId: string): Promise<ICheckoutSession> {
+    const response = await fetch(`/api/checkout/session/${sessionId}`, {
+      headers: {
+        Authorization: `Bearer ${UserService.getInstance().getToken()}`
+      }
+    });
+    return await response.json();
   }
 }
 

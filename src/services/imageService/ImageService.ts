@@ -65,7 +65,7 @@ class ImageService {
 
     if (!images) images = await fetch("/api/image").then(r => r.json());
 
-    if (images && !(images as any).message) {
+    if (images && !(images as any).msg) {
       this._updateCache(images);
 
       return images;

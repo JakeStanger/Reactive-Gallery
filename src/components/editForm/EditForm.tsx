@@ -7,6 +7,8 @@ import ILocation from "../../services/imageService/ILocation";
 import ITag from "../..//services/imageService/ITag";
 import ImageService from "../../services/imageService/ImageService";
 import IImage from "../../services/imageService/IImage";
+import Dropdown from "../dropdown/Dropdown";
+import PriceService from "../../services/priceService/PriceService";
 
 class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
   private _imageService: ImageService;
@@ -21,19 +23,33 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
       tags: props.image.tags || [],
 
       suggestedLocations: [],
-      suggestedTags: []
+      suggestedTags: [],
+
+      priceGroup: props.image.priceGroup,
+      priceGroups: []
     };
 
     this._imageService = ImageService.getInstance();
   }
 
   public componentDidMount() {
+    const { priceGroup } = this.state;
+
     this._imageService
       .getLocations()
       .then(suggestedLocations => this.setState({ suggestedLocations }));
     this._imageService
       .getTags()
       .then(suggestedTags => this.setState({ suggestedTags }));
+
+    PriceService.getInstance()
+      .getAllPriceGroups()
+      .then(priceGroups =>
+        this.setState({
+          priceGroups,
+          priceGroup: priceGroup ? priceGroup : priceGroups[0]
+        })
+      );
   }
 
   private _setName = (ev: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,27 +80,38 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
     this.setState({ tags });
   };
 
+  private _setPriceGroup = (priceGroupId: string) => {
+    const groupId = parseInt(priceGroupId);
+    const { priceGroups } = this.state;
+    this.setState({
+      priceGroup: priceGroups.find(group => group.id === groupId)!
+    });
+  };
+
   private _onSave = async (ev: React.FormEvent) => {
     ev.preventDefault();
-    const { image, mode, file } = this.props;
-    const { name, description, location, tags } = this.state;
+    const { image, mode, file, history } = this.props;
+    const { name, description, location, tags, priceGroup } = this.state;
 
     if (mode === "upload" && file) {
       const res = await this._imageService.upload(file, {
         name,
         description,
         location: location ? location[0] : null,
-        tags
+        tags,
+        priceGroup
       });
-      if((res as {msg: string}).msg && this.props.onError) this.props.onError((res as {msg: string}).msg);
-      else window.location.href = "/";
+      if ((res as { msg: string }).msg && this.props.onError)
+        this.props.onError((res as { msg: string }).msg);
+      else history.push('/');
     } else {
       await this._imageService.update({
         filename: image.filename,
         name,
         description,
         location: location ? location[0] : null,
-        tags
+        tags,
+        priceGroup
       });
       window.location.reload();
     }
@@ -93,7 +120,7 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
   private _onDelete = async (ev: React.FormEvent) => {
     ev.preventDefault();
     await this._imageService.delete(this.props.image as IImage);
-    window.location.href = "/";
+    this.props.history.push('/');
   };
 
   public render() {
@@ -103,7 +130,9 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
       location,
       tags,
       suggestedLocations,
-      suggestedTags
+      suggestedTags,
+      priceGroup,
+      priceGroups
     } = this.state;
 
     const { mode } = this.props;
@@ -156,6 +185,19 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
                 : ""
             }
             allowNew
+          />
+        </div>
+        <label>
+          <div className={styles.label}>Price Group</div>
+        </label>
+        <div>
+          <Dropdown
+            value={priceGroup?.id}
+            onChange={this._setPriceGroup}
+            options={priceGroups.map(group => ({
+              key: group.id.toString(),
+              value: group.name
+            }))}
           />
         </div>
         <div className={styles.buttons}>

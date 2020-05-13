@@ -1,0 +1,31 @@
+@import "../../styles/";
+
+.row {
+  display: flex;
+
+  @media screen and (max-width: 700px) {
+    flex-direction: column;
+  }
+
+  .items {
+    flex: 1;
+    .table {
+      display: grid;
+      grid-template-columns: 1fr 0.1fr 0.1fr 0.1fr;
+
+      > div {
+        padding: 10px 5px;
+        border-bottom: 1px solid $grey-light;
+      }
+    }
+  }
+
+  .address {
+    flex: 0.5;
+    text-align: right;
+
+    @media screen and (max-width: 700px) {
+      text-align: center;
+    }
+  }
+}

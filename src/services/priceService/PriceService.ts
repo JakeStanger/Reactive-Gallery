@@ -16,7 +16,7 @@ class PriceService {
   public async getAllPrices(): Promise<IPrice[]> {
     const prices = await fetch("/api/price").then(r => r.json());
 
-    if (prices && !(prices as any).message) {
+    if (prices && !(prices as any).msg) {
       return prices;
     } else {
       console.error(prices);
@@ -29,7 +29,7 @@ class PriceService {
       r.json()
     );
 
-    if (prices && !(prices as any).message) {
+    if (prices && !(prices as any).msg) {
       return prices;
     } else {
       console.error(prices);
@@ -40,7 +40,7 @@ class PriceService {
   public async getAllPriceGroups(): Promise<IPriceGroup[]> {
     const priceGroups = await fetch("/api/pricegroup").then(r => r.json());
 
-    if (priceGroups && !(priceGroups as any).message) {
+    if (priceGroups && !(priceGroups as any).msg) {
       return priceGroups;
     } else {
       console.error(priceGroups);

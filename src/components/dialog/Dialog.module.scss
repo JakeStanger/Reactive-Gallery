@@ -1,0 +1,36 @@
+@import "../../styles/";
+
+.modal {
+  position: fixed;
+  z-index: 10000;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba($black, 0.4);
+
+  .dialog {
+    background-color: $white;
+    padding: 20px;
+    width: 50%;
+    max-width: 850px;
+    margin: 15% auto;
+    position: relative;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12), 0 16px 32px rgba(0, 0, 0, 0.16);
+
+    @media screen and (max-width: 600px) {
+      width: 90%;
+    }
+
+    .closeBtn {
+      position: absolute;
+      z-index: 10000;
+      top: 20px;
+      right: 20px;
+      padding: 5px;
+      font-size: 1.3rem;
+      color: $black;
+      cursor: pointer;
+    }
+  }
+}

@@ -1,0 +1,24 @@
+@import "../../styles";
+
+.basket {
+  .controls {
+    padding: 10px;
+
+    button + button {
+      margin-left: 5px;
+    }
+  }
+
+  @media only screen and (min-width: 380px) {
+    .cards {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+}
+
+.error {
+  background-color: #cb6d6d;
+  border-radius: 5px;
+  padding: 10px;
+}

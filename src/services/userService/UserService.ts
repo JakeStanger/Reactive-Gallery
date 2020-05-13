@@ -50,7 +50,7 @@ class UserService {
 
     if (!user || user.expired) {
       this.logout();
-      window.location.href = "/login";
+      window.location.href = "/login"; // force refresh - probably not required eh
       return null;
     }
 
@@ -69,7 +69,7 @@ class UserService {
   ): Promise<string | null> => {
     ev.preventDefault();
 
-    const { accessToken, message } = await fetch("/api/login", {
+    const { accessToken, msg } = await fetch("/api/login", {
       method: "POST",
       body: JSON.stringify({ username, password }),
       headers: {
@@ -79,7 +79,7 @@ class UserService {
 
     if (accessToken) this._setToken(accessToken);
 
-    return message;
+    return msg;
   }
 
   public logout() {
@@ -87,12 +87,12 @@ class UserService {
     this._currentUser = null;
   }
 
-  public signup = async (ev: React.FormEvent, username: string, password: string): Promise<string | null> => {
+  public signup = async (ev: React.FormEvent, username: string, password: string, email: string): Promise<string | null> => {
     ev.preventDefault();
 
-    const { accessToken, message } = await fetch("/api/signup", {
+    const { accessToken, msg } = await fetch("/api/signup", {
       method: "POST",
-      body: JSON.stringify({username, password}),
+      body: JSON.stringify({username, password, email}),
       headers: {
         "Content-Type": "application/json"
       }
@@ -100,7 +100,7 @@ class UserService {
     
     if(accessToken) this._setToken(accessToken);
 
-    return message;
+    return msg;
   }
 }
 

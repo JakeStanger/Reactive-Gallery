@@ -1,0 +1,61 @@
+@import "colors";
+@import "fonts";
+@import "reactTags";
+
+body {
+  margin: 0;
+  padding-bottom: 40px;
+  font-family: $font-regular;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  text-decoration: none;
+  color: $black-light;
+
+  &:hover {
+    color: lighten($black-light, 10);
+  }
+
+  &:active,
+  &.active {
+    color: $black-dark;
+  }
+}
+
+tr {
+  td {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+
+    &:first-child {
+      font-weight: 600;
+      padding-right: 20px;
+    }
+  }
+
+  th {
+    padding: 10px 20px 10px 0;
+  }
+}
+
+textarea {
+  width: 100%;
+  border: 2px solid $grey-light;
+  padding: 5px;
+  font-family: $font-regular;
+  resize: none;
+}
+
+p {
+  white-space: pre-wrap;
+
+  &:first-of-type {
+    margin-top: 0;
+  }
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+}

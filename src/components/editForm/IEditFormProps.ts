@@ -1,4 +1,5 @@
 import IImage from "../../services/imageService/IImage";
+import { History } from "history";
 
 interface IEditFormProps {
   image: Partial<IImage>;
@@ -7,6 +8,8 @@ interface IEditFormProps {
   file?: File;
 
   onError?: (error: string) => void;
+
+  history: History;
 }
 
 export default IEditFormProps;

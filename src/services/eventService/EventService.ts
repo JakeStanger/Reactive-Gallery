@@ -15,7 +15,7 @@ class EventService {
   public async getAll(): Promise<IEvent[]> {
     const events = await fetch("/api/event").then(r => r.json());
 
-    if (events && !(events as any).message) {
+    if (events && !(events as any).msg) {
       return events;
     } else {
       console.error(events);

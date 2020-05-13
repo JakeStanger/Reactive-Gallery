@@ -1,6 +1,7 @@
 import ILocation from "./ILocation";
 import ITag from "./ITag";
 import IPriceGroup from "../priceService/IPriceGroup";
+import IPrice from "../priceService/IPrice";
 
 interface IImage {
   description: string;
