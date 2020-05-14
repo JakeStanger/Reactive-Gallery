@@ -1,9 +1,12 @@
 import { Model, DataTypes } from "sequelize";
-import Database from "../database";
+import Database from "../index";
 
 class PriceGroup extends Model {
   public id: number;
   public name: string;
+  public description: string;
+  public ratioWidth: number;
+  public ratioHeight: number;
 
   public static load() {
     PriceGroup.init(
@@ -17,7 +20,10 @@ class PriceGroup extends Model {
           type: DataTypes.STRING(255),
           allowNull: false,
           unique: true
-        }
+        },
+        description: DataTypes.TEXT,
+        ratioWidth: DataTypes.SMALLINT,
+        ratioHeight: DataTypes.SMALLINT
       },
       {
         sequelize: Database.getConnection(),

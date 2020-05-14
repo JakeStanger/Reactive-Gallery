@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import BasketItem from "../../models/BasketItem";
+import BasketItem from "../../database/models/BasketItem";
 import StripeManager from "../../StripeManager";
 
 export const handleStripeWebhook = async (req: Request, res: Response) => {

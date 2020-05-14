@@ -1,15 +1,16 @@
 import { Model, DataTypes } from "sequelize";
-import Database from "../database";
+import Database from "../index";
 import Image from "./Image";
 
-class Location extends Model {
+class Tag extends Model {
   public id: number;
+
   public name: string;
 
   public images?: Image[];
 
   public static load() {
-    Location.init(
+    Tag.init(
       {
         id: {
           type: DataTypes.INTEGER.UNSIGNED,
@@ -23,16 +24,23 @@ class Location extends Model {
       },
       {
         sequelize: Database.getConnection(),
-        tableName: "locations"
+        tableName: "tags"
       }
     );
   }
 
-  public static async getFromObject(location: any): Promise<Location> {
-    return await Location.findOrCreate({
-      where: { name: location.name }
-    }).then(([location]) => location);
+  public static async getFromArray(tags: any[]) {
+    return await Promise.all(
+      tags.map(
+        (tagData: Tag) =>
+          new Promise<Tag>(resolve => {
+            Tag.findOrCreate({ where: { name: tagData.name } }).then(([tag]) =>
+              resolve(tag)
+            );
+          })
+      )
+    );
   }
 }
 
-export default Location;
+export default Tag;

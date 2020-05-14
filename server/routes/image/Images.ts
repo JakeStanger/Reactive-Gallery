@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import Location from "../../models/Location";
-import Tag from "../../models/Tag";
-import Image from "../../models/Image";
+import Location from "../../database/models/Location";
+import Tag from "../../database/models/Tag";
+import Image from "../../database/models/Image";
 import { Op } from "sequelize";
 
 export const getImages = async (req: Request, res: Response) => {

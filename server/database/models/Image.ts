@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import Database from "../database";
+import Database from "../index";
 import Location from "./Location";
 import Tag from "./Tag";
 import { BelongsToSetAssociationMixin, BelongsToManySetAssociationsMixin } from "sequelize";

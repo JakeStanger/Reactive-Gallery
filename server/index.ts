@@ -4,11 +4,11 @@ import multer from "multer";
 
 import Database from "./database";
 
-import User from "./models/User";
-import Image from "./models/Image";
-import Location from "./models/Location";
-import Tag from "./models/Tag";
-import Event from "./models/Event";
+import User from "./database/models/User";
+import Image from "./database/models/Image";
+import Location from "./database/models/Location";
+import Tag from "./database/models/Tag";
+import Event from "./database/models/Event";
 import tokenChecker from "./tokenChecker";
 import { getTags } from "./routes/tag/Tags";
 import { getLocations } from "./routes/location/Locations";
@@ -24,11 +24,11 @@ import {
 import { login, signup, getUser } from "./routes/user/User";
 import { getEvents } from "./routes/event/Events";
 import { deleteEvent, patchEvent, postEvent } from "./routes/event/Event";
-import PriceGroup from "./models/PriceGroup";
-import Price from "./models/Price";
+import PriceGroup from "./database/models/PriceGroup";
+import Price from "./database/models/Price";
 import { getPrices, getPricesForGroup } from "./routes/price/Prices";
 import { getPriceGroups } from "./routes/priceGroup/PriceGroups";
-import BasketItem from "./models/BasketItem";
+import BasketItem from "./database/models/BasketItem";
 import {
   deleteBasketItem,
   postBasketItem

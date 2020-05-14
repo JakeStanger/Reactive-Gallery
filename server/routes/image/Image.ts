@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import Location from "../../models/Location";
-import Tag from "../../models/Tag";
-import Image from "../../models/Image";
+import Location from "../../database/models/Location";
+import Tag from "../../database/models/Tag";
+import Image from "../../database/models/Image";
 import * as imageGenerator from "../../utils/imageGenerator";
 import * as exifReader from "../../utils/exifReader";
-import User from "../../models/User";
-import PriceGroup from "../../models/PriceGroup";
+import User from "../../database/models/User";
+import PriceGroup from "../../database/models/PriceGroup";
 
 export const getImageThumbnail = async (req: Request, res: Response) => {
   return res

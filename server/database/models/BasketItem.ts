@@ -3,7 +3,7 @@ import {
   DataTypes,
   BelongsToSetAssociationMixin,
 } from "sequelize";
-import Database from "../database";
+import Database from "../index";
 import Image from "./Image";
 import User from "./User";
 import Price from "./Price";

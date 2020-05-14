@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
-import Tag from "../../models/Tag";
-import Image from "../../models/Image";
+import Tag from "../../database/models/Tag";
+import Image from "../../database/models/Image";
 
 export const getTags = async (req: Request, res: Response) => {
   const tags = await Tag.findAll({ include: [{ model: Image, as: "images" }] });

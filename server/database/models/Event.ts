@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import Database from "../database";
+import Database from "../index";
 
 class Event extends Model {
   public id: number;

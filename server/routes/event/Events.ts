@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Event from "../../models/Event";
+import Event from "../../database/models/Event";
 import { Op } from "sequelize";
 
 export const getEvents = async (req: Request, res: Response) => {

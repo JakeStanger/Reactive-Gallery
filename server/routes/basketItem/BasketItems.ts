@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import BasketItem from "../../models/BasketItem";
-import Image from "../../models/Image";
-import Price from "../../models/Price";
+import BasketItem from "../../database/models/BasketItem";
+import Image from "../../database/models/Image";
+import Price from "../../database/models/Price";
 
 export async function getUserBasket(userId: number) {
   return await BasketItem.findAll({

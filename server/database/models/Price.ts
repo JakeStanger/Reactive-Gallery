@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import Database from "../database";
+import Database from "../index";
 
 class Price extends Model {
   public id: number;

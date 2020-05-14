@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import BasketItem from "../../models/BasketItem";
+import BasketItem from "../../database/models/BasketItem";
 
 export const postBasketItem = async (req: Request, res: Response) => {
   const data = req.body;

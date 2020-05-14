@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Price from "../../models/Price";
+import Price from "../../database/models/Price";
 
 export const getPrices = async (req: Request, res: Response) => {
   const prices = await Price.findAll();
