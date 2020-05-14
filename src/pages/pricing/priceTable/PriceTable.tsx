@@ -36,7 +36,7 @@ const PriceTable: React.FC<IPriceTableProps> = ({
 
               </td>
               {price.framed && <td>
-                {price.framed.toFixed(2)}
+                £{price.framed.toFixed(2)}
               </td>}
             </tr>
           ))}
