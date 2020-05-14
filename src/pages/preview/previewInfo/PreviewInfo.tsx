@@ -12,26 +12,7 @@ import PriceTable from "../../pricing/priceTable/PriceTable";
 import PriceService from "../../../services/priceService/PriceService";
 import IPrice from "../../../services/priceService/IPrice";
 import { Link } from "react-router-dom";
-
-function toFraction(x: number) {
-  if (x === 0) return [0, 1];
-  if (x < 0) x = -x;
-  const tolerance = 0.0001;
-  let num = 1,
-    den = 1;
-
-  function iterate() {
-    const R = num / den;
-    if (Math.abs((R - x) / x) < tolerance) return;
-
-    if (R < x) num++;
-    else den++;
-    iterate();
-  }
-
-  iterate();
-  return `${num}/${den}`;
-}
+import Fraction from 'fraction.js';
 
 const PreviewInfo: React.FC<IPreviewInfoProps> = ({ image, user, history }) => {
   const [editing, setEditing] = useState(false);
@@ -130,7 +111,7 @@ const PreviewInfo: React.FC<IPreviewInfoProps> = ({ image, user, history }) => {
               </tr>
               <tr className={styles.tableRow}>
                 <td>Exposure</td>
-                <td>{toFraction(image.exposure)}s</td>
+                <td>{new Fraction(image.exposure).toFraction(true)}s</td>
               </tr>
               <tr className={styles.tableRow}>
                 <td>Focal Length</td>
