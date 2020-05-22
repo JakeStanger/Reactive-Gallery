@@ -30,12 +30,15 @@ export async function getExif(image: Buffer) {
     imageData.iso = exifRaw.ISO;
     imageData.cameraModel = (exif as ExifData).image.Model;
 
-    const timeTaken = DateTime.fromFormat(
-      exifRaw.DateTimeOriginal,
-      "yyyy:MM:dd hh:mm:ss"
-    );
-    if (timeTaken && timeTaken.isValid)
-      imageData.timeTaken = timeTaken.toJSDate();
+    if (exifRaw.DateTimeOriginal) {
+      const timeTaken = DateTime.fromFormat(
+        exifRaw.DateTimeOriginal,
+        "yyyy:MM:dd hh:mm:ss"
+      );
+
+      if (timeTaken && timeTaken.isValid)
+        imageData.timeTaken = timeTaken.toJSDate();
+    }
   }
 
   return imageData;
