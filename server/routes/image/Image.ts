@@ -99,6 +99,7 @@ export const postImage = async (req: Request, res: Response) => {
       ...(await exifReader.getExif(req.file.buffer))
     };
   } catch (err) {
+    console.error(err);
     return res.status(500).json(err.msg);
   }
 
