@@ -8,8 +8,8 @@ const TextPreamble: React.FC = () => (
       placed through the Facebook shop or by email.
     </p>
     <p>
-      Canvases are now available, please contact us to discuss your
-      requirements.
+      Canvases are now available. 3:2 (group 1) canvases can be ordered through the site; please contact us to discuss your
+      requirements for other size photos.
     </p>
   </>
 );
