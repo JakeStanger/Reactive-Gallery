@@ -75,9 +75,9 @@ const BasketDialog: React.FC<IBasketDialogProps> = ({
             />
           </label>
           {prices.find(price => price.id === priceId)?.framed && <div>
-            <Checkbox checked={framed} onChange={setFramed} label={"Framed"} />
+            <Checkbox checked={framed} onChange={setFramed} label={image.priceGroup.name !== "Other" ? "Framed" : "Pack of 8"} />
           </div>}
-          <div className={styles.subSubTitle}>Price: £{getPrice()}</div>
+          <div className={styles.subSubTitle}>Price: £{getPrice().toFixed(2)}</div>
           <PrimaryButton
             onClick={addToBasket}
             text={"Add"}
