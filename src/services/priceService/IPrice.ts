@@ -4,6 +4,7 @@ interface IPrice {
   price_group_id: number;
   framed: number;
   unframed: number;
+  postage: number;
 }
 
 export default IPrice;

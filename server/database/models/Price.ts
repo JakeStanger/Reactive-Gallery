@@ -7,6 +7,7 @@ class Price extends Model {
 
   public unframed: number;
   public framed: number;
+  public postage: number;
 
   public static load() {
     Price.init(
@@ -26,6 +27,9 @@ class Price extends Model {
         },
         framed: {
           type: DataTypes.FLOAT,
+        },
+        postage: {
+          type: DataTypes.FLOAT
         }
       },
       {

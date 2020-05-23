@@ -27,11 +27,14 @@ class CheckoutService {
     return publicKey;
   }
 
-  public async getSecretKey(): Promise<string> {
+  public async getSecretKey(post: boolean): Promise<string> {
     const response = await fetch("/api/checkout/secret", {
+      method: "POST",
       headers: {
-        Authorization: `Bearer ${UserService.getInstance().getToken()}`
-      }
+        Authorization: `Bearer ${UserService.getInstance().getToken()}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ post })
     });
     const { sessionId } = await response.json();
 

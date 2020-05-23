@@ -37,7 +37,7 @@ import { clearBasket, getBasket } from "./routes/basketItem/BasketItems";
 import {
   getCheckoutSession,
   getClientPublic,
-  getClientSecret
+  createCheckoutSession
 } from "./routes/checkout/Checkout";
 import { handleStripeWebhook } from "./routes/webhook/Webhook";
 import morgan from "morgan";
@@ -138,7 +138,7 @@ app.use(
     next: express.NextFunction
   ) => {
     console.error(err.stack);
-    res.status(500).send({ error: "An internal server error has occured" });
+    res.status(500).send({ message: "An internal server error has occured" });
   }
 );
 
@@ -188,7 +188,7 @@ router.delete("/basket/:basketItemId", tokenChecker, deleteBasketItem);
 
 router.get("/checkout/public", getClientPublic);
 
-router.get("/checkout/secret", tokenChecker, getClientSecret);
+router.post("/checkout/secret", tokenChecker, createCheckoutSession);
 
 router.get("/checkout/session/:sessionId", tokenChecker, getCheckoutSession);
 

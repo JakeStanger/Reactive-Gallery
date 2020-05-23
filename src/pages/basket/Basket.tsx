@@ -10,7 +10,7 @@ import PrimaryButton from "../../components/button/primary/PrimaryButton";
 import CheckoutService from "../../services/checkoutService/CheckoutService";
 import Dialog from "../../components/dialog/Dialog";
 import SecondaryButton from "../../components/button/secondary/SecondaryButton";
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from "react-router-dom";
 
 function getBasketTotal(basket: IBasketItem[]) {
   if (!basket.length) return 0;
@@ -22,7 +22,7 @@ function getBasketTotal(basket: IBasketItem[]) {
     .reduce((total, price) => total + price);
 }
 
-const Basket: React.FC<RouteComponentProps> = ({history}) => {
+const Basket: React.FC<RouteComponentProps> = ({ history }) => {
   const [basket, setBasket] = useState<IBasketItem[]>([]);
   const [stripePromise, setStripePromise] = useState<
     Promise<Stripe | null> | undefined
@@ -31,6 +31,8 @@ const Basket: React.FC<RouteComponentProps> = ({history}) => {
   const [deleteItem, setDeleteItem] = useState<IBasketItem | undefined | null>(
     undefined
   );
+
+  const [showBasketDialog, setShowBasketDialog] = useState(false);
 
   const [error, setError] = useState<Error | StripeError | undefined>();
 
@@ -66,28 +68,31 @@ const Basket: React.FC<RouteComponentProps> = ({history}) => {
     []
   );
 
-  const onCheckout = useCallback(async () => {
-    const sessionId = await CheckoutService.getInstance().getSecretKey();
-    const stripe = await stripePromise;
+  const onCheckout = useCallback(
+    async (post: boolean) => {
+      const sessionId = await CheckoutService.getInstance().getSecretKey(post);
+      const stripe = await stripePromise;
 
-    if (!stripe) {
-      const err = new Error(
-        "Stripe is not configured correctly on the client. This is our fault, not yours, so please let us know."
-      );
-      console.error(err);
-      setError(err);
-      return;
-    }
+      if (!stripe) {
+        const err = new Error(
+          "Stripe is not configured correctly on the client. This is our fault, not yours, so please let us know."
+        );
+        console.error(err);
+        setError(err);
+        return;
+      }
 
-    const { error } = await stripe!.redirectToCheckout({
-      sessionId
-    });
+      const { error } = await stripe!.redirectToCheckout({
+        sessionId
+      });
 
-    if (error) {
-      console.error(error);
-      setError(error);
-    }
-  }, [stripePromise]);
+      if (error) {
+        console.error(error);
+        setError(error);
+      }
+    },
+    [stripePromise]
+  );
 
   React.useEffect(() => {
     BasketService.getInstance()
@@ -101,6 +106,12 @@ const Basket: React.FC<RouteComponentProps> = ({history}) => {
       });
   }, []);
 
+  const onCheckoutDialog = useCallback(() => {
+    setShowBasketDialog(true);
+  }, []);
+
+  const cannotPost = !!basket.find(item => item.framed || !item.price.postage);
+
   return (
     <div className={styles.container}>
       {error && <div className={styles.error}>{error.message}</div>}
@@ -110,8 +121,11 @@ const Basket: React.FC<RouteComponentProps> = ({history}) => {
           <>
             <div className={styles.controls}>
               <div>Basket Total: £{getBasketTotal(basket)}</div>
-              <PrimaryButton onClick={onCheckout} text={"Checkout"} />
-              <PrimaryButton onClick={() => history.push('/')} text={"Add more"} />
+              <PrimaryButton onClick={onCheckoutDialog} text={"Checkout"} />
+              <PrimaryButton
+                onClick={() => history.push("/")}
+                text={"Add more"}
+              />
               <SecondaryButton
                 onClick={() => onSetDeleteItem(null)}
                 text={"Empty basket"}
@@ -157,6 +171,32 @@ const Basket: React.FC<RouteComponentProps> = ({history}) => {
         <SecondaryButton
           text={"Cancel"}
           onClick={() => onSetDeleteItem(undefined)}
+        />
+      </Dialog>
+      <Dialog
+        isOpen={showBasketDialog}
+        onDismiss={() => setShowBasketDialog(false)}
+      >
+        <div className={styles.subSubTitle}>Checkout</div>
+        <div>
+          Collection/local delivery is available. Please contact us if you wish
+          to arrange delivery; we ask that you pay a small delivery fee using
+          PayPal or cash on collection.
+        </div>
+        {cannotPost && (
+          <div>
+            Your basket contains one or more framed prints of canvases, which we
+            are unfortunately unable to post.
+          </div>
+        )}
+        <PrimaryButton
+          onClick={() => onCheckout(true)}
+          text={"Post"}
+          disabled={cannotPost}
+        />
+        <PrimaryButton
+          onClick={() => onCheckout(false)}
+          text={"Collect/Deliver"}
         />
       </Dialog>
     </div>
