@@ -30,7 +30,7 @@ class Database {
         timestamps: false,
         underscored: true
       },
-      logging: false
+      logging: settings.DATABASE_LOGGING === 'true'
     });
 
     await new Promise((resolve, reject) => {
