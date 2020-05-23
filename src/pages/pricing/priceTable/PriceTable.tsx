@@ -20,6 +20,7 @@ const PriceTable: React.FC<IPriceTableProps> = ({
           ) : (
             <>
               <th>Type</th>
+              <th>Single</th>
               <th>Pack of 8</th>
             </>
           )}
@@ -35,9 +36,9 @@ const PriceTable: React.FC<IPriceTableProps> = ({
                 £{price.unframed?.toFixed(2)}
 
               </td>
-              {price.framed && <td>
-                £{price.framed.toFixed(2)}
-              </td>}
+              <td>
+                {price.framed && `£${price.framed?.toFixed(2)}`}
+              </td>
             </tr>
           ))}
       </tbody>
