@@ -28,23 +28,17 @@ const Card: React.FC<ICardProps> = ({
   // TODO: Fix going back reloading gallery, not saving scroll state
   // TODO: Fix editing location CSS
   return (
-    <div className={styles.card} id={`card-${image.filename}`}>
-      <Link to={`/preview/${image.filename}`}>
-        <LazyLoad
-          height={height}
-          offset={300}
-          once={true}
-          resize={true}
-        >
+    <div className={styles.card} id={`card-${image.id}`}>
+      <Link to={`/preview/${image.id}`}>
+        <LazyLoad height={height} offset={300} once={true} resize={true}>
           <div>
             <img
-            className={styles.image}
-            src={imageService.getLink(image)}
-            alt={image.name}
-            height={height}
-          />
+              className={styles.image}
+              src={imageService.getLink(image)}
+              alt={image.name}
+              height={height}
+            />
           </div>
-
         </LazyLoad>
       </Link>
 
@@ -83,7 +77,10 @@ const Card: React.FC<ICardProps> = ({
             {image.tags.map(tag => (
               <Link
                 key={tag.id}
-                className={css(styles.tag, query === tag.name && styles.selected)}
+                className={css(
+                  styles.tag,
+                  query === tag.name && styles.selected
+                )}
                 to={{
                   pathname: "/",
                   search: `q=${tag.name}`
