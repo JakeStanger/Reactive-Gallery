@@ -71,7 +71,7 @@
     "react-tag-autocomplete": "5.11.1",
     "sass": "^1.23.3",
     "sequelize": "^5.21.1",
-    "sharp": "^0.23.2",
+    "sharp": "^0.25.3",
     "stripe": "^8.50.0",
     "typescript": "3.8.3"
   },
