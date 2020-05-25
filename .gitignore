@@ -28,3 +28,6 @@ server/config.json
 src/config.json
 .env
 src/pageContent/contact/photo.jpg
+
+/photos
+/photos_webp
