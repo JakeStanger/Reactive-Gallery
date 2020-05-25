@@ -3,9 +3,15 @@ import * as path from "path";
 
 export async function generateThumbnail(buffer: Buffer, filename: string) {
   await sharp(buffer)
-    .jpeg({ quality: 98 })
+    .webp({ quality: 90 })
     .resize(360, null)
-    .toFile(path.join(process.env.UPLOAD_PATH, filename + ".thumb"));
+    .toFile(
+      path.join(
+        process.env.UPLOAD_PATH,
+        "thumb",
+        filename.replace(/\.(.*)$/, ".webp")
+      )
+    );
 }
 
 export async function generateMarked(buffer: Buffer, filename: string) {
@@ -13,13 +19,13 @@ export async function generateMarked(buffer: Buffer, filename: string) {
     path.join(__dirname, "../", "../", "resources", "overlay.png")
   );
 
-  const image = await sharp(buffer).jpeg({ quality: 98 });
+  const image = await sharp(buffer);
   const { width, height } = await image.metadata();
 
   overlay = overlay.resize({ withoutEnlargement: true, width, height });
   const overlayBuffer = await overlay.toBuffer();
 
-  await image
+  return await image
     .composite([
       {
         input: overlayBuffer,
@@ -27,5 +33,13 @@ export async function generateMarked(buffer: Buffer, filename: string) {
         tile: true
       }
     ])
-    .toFile(path.join(process.env.UPLOAD_PATH, filename + ".marked"));
+    .webp({ quality: 95, alphaQuality: 95 })
+    .toFile(
+      path.join(
+        process.env.UPLOAD_PATH,
+        "marked",
+        filename.replace(/\.(.*)$/, ".webp")
+      )
+    )
+    .then(info => ({ width: info.width, height: info.height }));
 }

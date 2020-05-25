@@ -6,22 +6,23 @@ import * as imageGenerator from "../../utils/imageGenerator";
 import * as exifReader from "../../utils/exifReader";
 import User from "../../database/models/User";
 import PriceGroup from "../../database/models/PriceGroup";
+import * as path from "path";
 
 export const getImageThumbnail = async (req: Request, res: Response) => {
-  return res
-    .type("image/jpeg")
-    .sendFile(req.params.filename + ".thumb", { root: process.env.UPLOAD_PATH });
+  return res.type("image/webp").sendFile(req.params.filename, {
+    root: path.join(process.env.UPLOAD_PATH, "thumb")
+  });
 };
 
 export const getImageMarked = async (req: Request, res: Response) => {
-  return res
-    .type("image/jpeg")
-    .sendFile(req.params.filename + ".marked", { root: process.env.UPLOAD_PATH });
+  return res.type("image/webp").sendFile(req.params.filename, {
+    root: path.join(process.env.UPLOAD_PATH, "marked")
+  });
 };
 
 export const getImageInfo = async (req: Request, res: Response) => {
   const image = await Image.findOne({
-    where: { filename: req.params.filename },
+    where: { id: req.params.id },
     include: [
       { model: Location, as: "location" },
       { model: Tag, as: "tags" },
@@ -43,12 +44,12 @@ export const patchImageInfo = async (req: Request, res: Response) => {
 
   // Update name/description
   await Image.update(req.body, {
-    where: { filename: req.params.filename }
+    where: { id: req.params.id }
   });
 
   // Update tags and location
   const image = await Image.findOne({
-    where: { filename: req.params.filename }
+    where: { id: req.params.id }
   });
 
   if (req.body.location !== undefined) {
@@ -79,14 +80,14 @@ export const deleteImage = async (req: Request, res: Response) => {
 
   await Image.update(
     { deleted: true },
-    { where: { filename: req.params.filename } }
+    { where: { id: req.params.id } }
   );
   return res.json({ msg: "Image deleted" });
 };
 
 export const postImage = async (req: Request, res: Response) => {
   let imageData = JSON.parse(req.body.data);
-  imageData.filename = req.file.originalname;
+  imageData.filename = req.file.originalname.replace(/\.(.*)$/, ".webp");
 
   const user = await User.findOne({ where: { id: (req.user as any).id } });
   if (!user.canUpload) {
@@ -99,12 +100,15 @@ export const postImage = async (req: Request, res: Response) => {
       ...(await exifReader.getExif(req.file.buffer))
     };
   } catch (err) {
-    console.error(err);
-    return res.status(500).json(err.msg);
+    return res.status(500).json({ msg: err.message });
   }
 
   await imageGenerator.generateThumbnail(req.file.buffer, imageData.filename);
-  await imageGenerator.generateMarked(req.file.buffer, imageData.filename);
+  const { width, height } = await imageGenerator.generateMarked(req.file.buffer, imageData.filename);
+
+  // width and height should be returned form
+  imageData.width = width;
+  imageData.height = height;
 
   // delete previous matching entry
   const existingImage = await Image.findOne({
