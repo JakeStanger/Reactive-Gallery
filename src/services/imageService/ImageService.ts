@@ -34,13 +34,13 @@ class ImageService {
     sessionStorage.removeItem("images");
   }
 
-  public async get(fileName: string): Promise<IImage> {
-    return await fetch(`/api/image/${fileName}/info`).then(r => r.json());
+  public async get(id: number): Promise<IImage> {
+    return await fetch(`/api/image/${id}/info`).then(r => r.json());
   }
 
   public async update(image: Partial<IImage>) {
     this._clearCache();
-    return await fetch(`/api/image/${image.filename}/info`, {
+    return await fetch(`/api/image/${image.id}/info`, {
       method: "PATCH",
       body: JSON.stringify(image),
       headers: {
@@ -52,7 +52,7 @@ class ImageService {
 
   public async delete(image: IImage) {
     this._clearCache();
-    return await fetch(`/api/image/${image.filename}`, {
+    return await fetch(`/api/image/${image.id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${this._userService.getToken()}`
@@ -76,7 +76,10 @@ class ImageService {
     return `/api/image/${!full ? "thumb/" : ""}${image.filename}`;
   }
 
-  public async upload(file: File, image: Partial<IImage>): Promise<IImage | { msg: string }> {
+  public async upload(
+    file: File,
+    image: Partial<IImage>
+  ): Promise<IImage | { msg: string }> {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("data", JSON.stringify(image));
@@ -85,7 +88,7 @@ class ImageService {
       method: "POST",
       body: formData,
       headers: {
-        Authorization: `Bearer ${this._userService.getToken()}`,
+        Authorization: `Bearer ${this._userService.getToken()}`
       }
     });
 

@@ -4,6 +4,7 @@ import IPriceGroup from "../priceService/IPriceGroup";
 import IPrice from "../priceService/IPrice";
 
 interface IImage {
+  id: number;
   description: string;
   filename: string;
   location: ILocation | null;
