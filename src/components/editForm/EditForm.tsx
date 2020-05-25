@@ -9,6 +9,7 @@ import ImageService from "../../services/imageService/ImageService";
 import IImage from "../../services/imageService/IImage";
 import Dropdown from "../dropdown/Dropdown";
 import PriceService from "../../services/priceService/PriceService";
+import Loader from "../loader/Loader";
 
 class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
   private _imageService: ImageService;
@@ -26,7 +27,9 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
       suggestedTags: [],
 
       priceGroup: props.image.priceGroup,
-      priceGroups: []
+      priceGroups: [],
+
+      loading: false
     };
 
     this._imageService = ImageService.getInstance();
@@ -38,6 +41,7 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
     this._imageService
       .getLocations()
       .then(suggestedLocations => this.setState({ suggestedLocations }));
+
     this._imageService
       .getTags()
       .then(suggestedTags => this.setState({ suggestedTags }));
@@ -90,37 +94,48 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
 
   private _onSave = async (ev: React.FormEvent) => {
     ev.preventDefault();
-    const { image, mode, file, history } = this.props;
-    const { name, description, location, tags, priceGroup } = this.state;
 
-    if (mode === "upload" && file) {
-      const res = await this._imageService.upload(file, {
-        name,
-        description,
-        location: location ? location[0] : null,
-        tags,
-        priceGroup
-      });
-      if ((res as { msg: string }).msg && this.props.onError)
-        this.props.onError((res as { msg: string }).msg);
-      else history.push('/');
-    } else {
-      await this._imageService.update({
-        filename: image.filename,
-        name,
-        description,
-        location: location ? location[0] : null,
-        tags,
-        priceGroup
-      });
-      window.location.reload();
+    this.setState({ loading: true });
+
+    try {
+      const { image, mode, file, history } = this.props;
+      const { name, description, location, tags, priceGroup } = this.state;
+
+      if (mode === "upload" && file) {
+        const res = await this._imageService.upload(file, {
+          name,
+          description,
+          location: location ? location[0] : null,
+          tags,
+          priceGroup
+        });
+
+        if ((res as { msg: string }).msg && this.props.onError)
+          this.props.onError((res as { msg: string }).msg);
+        else history.push("/");
+      } else {
+        await this._imageService.update({
+          filename: image.filename,
+          name,
+          description,
+          location: location ? location[0] : null,
+          tags,
+          priceGroup
+        });
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error(err);
+      if (this.props.onError) this.props.onError(err.message);
     }
+
+    this.setState({ loading: false });
   };
 
   private _onDelete = async (ev: React.FormEvent) => {
     ev.preventDefault();
     await this._imageService.delete(this.props.image as IImage);
-    this.props.history.push('/');
+    this.props.history.push("/");
   };
 
   public render() {
@@ -210,6 +225,7 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
             </button>
           )}
         </div>
+        {this.state.loading && <Loader small />}
       </form>
     );
   }

@@ -35,7 +35,7 @@ class Upload extends React.Component<{}, IUploadState> {
   ) => {
     try {
       progress(false, 0, 100);
-      this.setState({ file });
+      this.setState({ file, error: undefined });
       load(file);
       progress(false, 100, 100);
     } catch (err) {
@@ -53,7 +53,7 @@ class Upload extends React.Component<{}, IUploadState> {
           acceptedFileTypes={["image/*"]}
           server={{
             process: this._onUpload,
-            revert: () => this.setState({ file: null })
+            revert: () => this.setState({ file: null, error: undefined })
           }}
         />
         <div className={styles.container}>

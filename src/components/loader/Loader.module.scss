@@ -1,6 +1,8 @@
 @import "../../styles/";
 
 .loaderContainer {
+  $padding: 100px;
+
   position: sticky;
   background-color: $white;
   z-index: 100;
@@ -9,10 +11,7 @@
   display: flex;
   justify-content: center;
 
-  $padding: 100px;
-  $loader-size: 100px;
-
-  width: calc(100% - #{2*$padding});
+  width: calc(100% - #{2 * $padding});
   height: 100vh;
 
   padding: $padding;
@@ -22,31 +21,32 @@
   &.fadeout {
     opacity: 0;
   }
+}
 
-  .loader {
+.loader {
+  $loader-size: 100px;
 
-    position: relative;
-    color: $black;
-    width: 90vw;
-    max-width: 500px;
-    text-align: center;
+  position: relative;
+  color: $black;
+  width: 90vw;
+  max-width: 500px;
+  text-align: center;
 
-    font-size: 2rem;
+  font-size: 2rem;
 
-    height: 2rem;
+  height: 2rem;
 
-    &:after {
-      position: absolute;
-      content: "";
-      width: $loader-size;
-      height: $loader-size;
-      border: 16px solid $black;
-      border-left-color: transparent;
-      border-radius: 50%;
-      top: calc(100% + 10px);
-      left: calc(50% - #{$loader-size / 2 + 16px});
-      animation: rotation 1s linear infinite;
-    }
+  &:after {
+    position: absolute;
+    content: "";
+    width: $loader-size;
+    height: $loader-size;
+    border: 16px solid $black;
+    border-left-color: transparent;
+    border-radius: 50%;
+    top: calc(100% + 10px);
+    left: calc(50% - #{$loader-size / 2 + 16px});
+    animation: rotation 1s linear infinite;
   }
 }
 

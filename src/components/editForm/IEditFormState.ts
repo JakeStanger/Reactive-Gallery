@@ -13,6 +13,8 @@ interface IEditPanelState {
 
   priceGroup: IPriceGroup | undefined;
   priceGroups: IPriceGroup[];
+
+  loading: boolean;
 }
 
 export default IEditPanelState;
