@@ -7,5 +7,11 @@
       <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mariadb://mariadb.media-server.lan:3306/photos</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="photos_test@mariadb" uuid="34e1dc73-7a42-4e05-913a-009e52fc31ee">
+      <driver-ref>mariadb</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mariadb://mariadb:3306/photos_test</jdbc-url>
+    </data-source>
   </component>
 </project>
