@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import bodyParser from "body-parser";
 import multer from "multer";
 
@@ -14,14 +14,14 @@ import { getTags } from "./routes/tag/Tags";
 import { getLocations } from "./routes/location/Locations";
 import { getImages } from "./routes/image/Images";
 import {
-  getImageInfo,
-  patchImageInfo,
   deleteImage,
-  postImage,
+  getImageInfo,
+  getImageMarked,
   getImageThumbnail,
-  getImageMarked
+  patchImageInfo,
+  postImage
 } from "./routes/image/Image";
-import { login, signup, getUser } from "./routes/user/User";
+import { getUser, login, signup } from "./routes/user/User";
 import { getEvents } from "./routes/event/Events";
 import { deleteEvent, patchEvent, postEvent } from "./routes/event/Event";
 import PriceGroup from "./database/models/PriceGroup";
@@ -35,9 +35,9 @@ import {
 } from "./routes/basketItem/BasketItem";
 import { clearBasket, getBasket } from "./routes/basketItem/BasketItems";
 import {
+  createCheckoutSession,
   getCheckoutSession,
-  getClientPublic,
-  createCheckoutSession
+  getClientPublic
 } from "./routes/checkout/Checkout";
 import { handleStripeWebhook } from "./routes/webhook/Webhook";
 import morgan from "morgan";
@@ -60,7 +60,10 @@ Database.get()
 
     BasketItem.load();
 
-    Image.belongsTo(Location, { foreignKey: "location_key", as: "location" });
+    Image.belongsTo(Location, {
+      foreignKey: "location_key",
+      as: "location"
+    });
 
     Image.belongsToMany(Tag, {
       through: "image_tag",
@@ -99,6 +102,12 @@ Database.get()
       foreignKey: "price_id",
       as: "price"
     });
+
+    if (process.env.DATABASE_DO_SYNC) {
+      Database.getConnection()
+        .sync()
+        .catch(console.error);
+    }
   });
 
 const app = express();
@@ -154,11 +163,11 @@ router.get("/image/thumb/:filename", getImageThumbnail);
 
 router.get("/image/:filename", getImageMarked);
 
-router.get("/image/:filename/info", getImageInfo);
+router.get("/image/:id/info", getImageInfo);
 
-router.patch("/image/:filename/info", tokenChecker, patchImageInfo);
+router.patch("/image/:id/info", tokenChecker, patchImageInfo);
 
-router.delete("/image/:filename", tokenChecker, deleteImage);
+router.delete("/image/:id", tokenChecker, deleteImage);
 
 // tags and locations
 router.get("/tag", getTags);
