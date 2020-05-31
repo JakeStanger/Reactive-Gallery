@@ -215,6 +215,8 @@ app.use((err: any, req: any, res: any, next: any) => {
   next(err);
 });
 
-app.listen(process.env.SERVER_PORT, () =>
-  console.log(`Express listening on port ${process.env.SERVER_PORT}`)
+app.listen(
+  parseInt(process.env.SERVER_PORT) || 9000,
+  process.env.SERVER_HOST || "127.0.0.1",
+  () => console.log(`Express listening on port ${process.env.SERVER_PORT}`)
 );
