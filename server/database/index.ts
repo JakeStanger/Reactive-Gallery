@@ -22,7 +22,7 @@ class Database {
     const settings = process.env;
     const db = new Sequelize(settings.DATABASE_NAME, settings.DATABASE_USER, settings.DATABASE_PASSWORD, {
       host: settings.DATABASE_HOST,
-      dialect: settings.DATABASE_DIALIECT as Dialect,
+      dialect: settings.DATABASE_DIALECT as Dialect,
       dialectOptions: {
         timezone: 'Etc/GMT0'
       },
