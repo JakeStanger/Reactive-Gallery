@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./BasketDialog.module.scss";
 import IBasketDialogProps from "./IBasketDialogProps";
 import { range } from "lodash";
@@ -41,6 +41,13 @@ const BasketDialog: React.FC<IBasketDialogProps> = ({
       })
       .catch(console.error);
   }, [framed, image, priceId, prices, quantity, history]);
+
+  useEffect(() => {
+    const price = prices?.find(p => p.id === priceId);
+    if(price?.framed === null && framed) {
+      setFramed(false);
+    }
+  }, [prices, priceId, framed])
 
   return (
     <Dialog isOpen={true} onDismiss={onDismiss}>
