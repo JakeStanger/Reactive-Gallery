@@ -9,6 +9,8 @@ class Price extends Model {
   public framed: number;
   public postage: number;
 
+  public price_group_id: number;
+
   public static load() {
     Price.init(
       {

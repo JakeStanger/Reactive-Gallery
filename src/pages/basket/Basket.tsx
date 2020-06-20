@@ -110,7 +110,12 @@ const Basket: React.FC<RouteComponentProps> = ({ history }) => {
     setShowBasketDialog(true);
   }, []);
 
-  const cannotPost = !!basket.find(item => item.framed || !item.price.postage);
+  const GREETINGS_CARDS_GROUP = 1000;
+  const cannotPost = !!basket.find(
+    item =>
+      (item.framed && item.price.price_group_id !== GREETINGS_CARDS_GROUP) ||
+      !item.price.postage
+  );
 
   return (
     <div className={styles.container}>

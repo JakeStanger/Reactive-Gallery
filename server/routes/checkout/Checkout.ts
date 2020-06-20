@@ -22,9 +22,13 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
   }));
 
   // Include postage if requested
-  const canPost = !basket.find(item => item.framed || !item.price.postage);
+  const GREETINGS_CARDS_GROUP = 1000;
+  const canPost = !basket.find(
+    item =>
+      (item.framed && item.price.price_group_id !== GREETINGS_CARDS_GROUP) ||
+      !item.price.postage
+  );
   if (req.body.post && canPost) {
-
     const postagePrice = basket
       .map(item => item.price.postage)
       .reduce((max, price) => {
