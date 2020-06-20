@@ -115,6 +115,7 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
         else history.push("/");
       } else {
         await this._imageService.update({
+          id: image.id,
           filename: image.filename,
           name,
           description,
