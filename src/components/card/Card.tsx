@@ -31,7 +31,7 @@ const Card: React.FC<ICardProps> = ({
     <div className={styles.card} id={`card-${image.id}`}>
       <Link to={`/preview/${image.id}`}>
         <LazyLoad height={height} offset={300} once={true} resize={true}>
-          <div>
+          <div style={{height}}>
             <img
               className={styles.image}
               src={imageService.getLink(image)}
