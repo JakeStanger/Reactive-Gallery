@@ -9,15 +9,31 @@ import PriceGroup from "../../database/models/PriceGroup";
 import * as path from "path";
 
 export const getImageThumbnail = async (req: Request, res: Response) => {
-  return res.type("image/webp").sendFile(req.params.filename, {
-    root: path.join(process.env.UPLOAD_PATH, "thumb")
-  });
+  if (req.params.filename.endsWith("webp")) {
+    return res.type("image/webp").sendFile(req.params.filename, {
+      root: path.join(process.env.UPLOAD_PATH, "thumb")
+    });
+  } else {
+    const filename = req.params.filename.replace(/jpeg$/, "webp");
+    await imageGenerator.generateJpeg(filename, "thumb");
+    return res.type("image/jpeg").sendFile(filename, {
+      root: path.join(process.env.UPLOAD_PATH, "thumb")
+    });
+  }
 };
 
 export const getImageMarked = async (req: Request, res: Response) => {
-  return res.type("image/webp").sendFile(req.params.filename, {
-    root: path.join(process.env.UPLOAD_PATH, "marked")
-  });
+  if (req.params.filename.endsWith("webp")) {
+    return res.type("image/webp").sendFile(req.params.filename, {
+      root: path.join(process.env.UPLOAD_PATH, "marked")
+    });
+  } else {
+    const filename = req.params.filename.replace(/jpeg$/, "webp");
+    await imageGenerator.generateJpeg(filename, "marked");
+    return res.type("image/jpeg").sendFile(filename, {
+      root: path.join(process.env.UPLOAD_PATH, "marked")
+    });
+  }
 };
 
 export const getImageInfo = async (req: Request, res: Response) => {
@@ -78,10 +94,7 @@ export const deleteImage = async (req: Request, res: Response) => {
     res.status(401).json({ msg: "Missing upload permissions" });
   }
 
-  await Image.update(
-    { deleted: true },
-    { where: { id: req.params.id } }
-  );
+  await Image.update({ deleted: true }, { where: { id: req.params.id } });
   return res.json({ msg: "Image deleted" });
 };
 
@@ -105,7 +118,10 @@ export const postImage = async (req: Request, res: Response) => {
   }
 
   await imageGenerator.generateThumbnail(req.file.buffer, imageData.filename);
-  const { width, height } = await imageGenerator.generateMarked(req.file.buffer, imageData.filename);
+  const { width, height } = await imageGenerator.generateMarked(
+    req.file.buffer,
+    imageData.filename
+  );
 
   // width and height should be returned form
   imageData.width = width;

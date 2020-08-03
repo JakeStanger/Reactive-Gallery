@@ -1,6 +1,8 @@
 import IImage from "./IImage";
 import UserService from "../userService/UserService";
 import ITag from "./ITag";
+import { detect } from "detect-browser";
+const browser = detect();
 
 class ImageService {
   private static _instance: ImageService;
@@ -73,7 +75,13 @@ class ImageService {
   }
 
   public getLink(image: IImage, full?: boolean) {
-    return `/api/image/${!full ? "thumb/" : ""}${image.filename}`;
+    const WEBP_UNSUPPORTED = ["safari", "ios-webview"];
+    let filename = image.filename;
+    const jpeg = browser?.name && WEBP_UNSUPPORTED.includes(browser.name);
+
+    if(jpeg) filename = filename.replace(/webp$/, 'jpeg');
+
+    return `/api/image/${!full ? "thumb/" : ""}${filename}`;
   }
 
   public async upload(

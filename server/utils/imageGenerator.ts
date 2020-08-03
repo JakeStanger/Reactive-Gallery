@@ -1,5 +1,6 @@
 import sharp from "sharp";
 import * as path from "path";
+import * as fs from "fs";
 
 export async function generateThumbnail(buffer: Buffer, filename: string) {
   await sharp(buffer)
@@ -42,4 +43,22 @@ export async function generateMarked(buffer: Buffer, filename: string) {
       )
     )
     .then(info => ({ width: info.width, height: info.height }));
+}
+
+/**
+ * Generates a jpeg from a webp if required.
+ * @param filename the webp filename
+ * @param type marked or thumb image
+ */
+export async function generateJpeg(filename: string, type: "marked" | "thumb") {
+  const filePath = path.join(process.env.UPLOAD_PATH, type, filename);
+  const jpegPath = filePath.replace(/\.(.*)$/, ".jpeg")
+
+  if (fs.existsSync(jpegPath)) {
+    return;
+  }
+
+  await sharp(filePath)
+    .jpeg({ quality: 98 })
+    .toFile(jpegPath);
 }
