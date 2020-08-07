@@ -16,7 +16,7 @@ export const getImageThumbnail = async (req: Request, res: Response) => {
   } else {
     const filename = req.params.filename.replace(/jpeg$/, "webp");
     await imageGenerator.generateJpeg(filename, "thumb");
-    return res.type("image/jpeg").sendFile(filename, {
+    return res.type("image/jpeg").sendFile(req.params.filename, {
       root: path.join(process.env.UPLOAD_PATH, "thumb")
     });
   }
@@ -30,7 +30,8 @@ export const getImageMarked = async (req: Request, res: Response) => {
   } else {
     const filename = req.params.filename.replace(/jpeg$/, "webp");
     await imageGenerator.generateJpeg(filename, "marked");
-    return res.type("image/jpeg").sendFile(filename, {
+
+    return res.type("image/jpeg").sendFile(req.params.filename, {
       root: path.join(process.env.UPLOAD_PATH, "marked")
     });
   }
