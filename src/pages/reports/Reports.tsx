@@ -6,7 +6,7 @@ import ImageService from "../../services/imageService/ImageService";
 import { Link } from "react-router-dom";
 
 const ImageLink: React.FC<{image: IImage}> = ({image}) => (
-  <div className={styles.imageLink}><Link to={`/preview/${image.filename}`} target={'_blank'}>{image.name}</Link></div>
+  <div className={styles.imageLink}><Link to={`/preview/${image.id}`} target={'_blank'}>{image.name}</Link></div>
 )
 
 const Reports: React.FC<IReportsProps> = () => {
@@ -51,6 +51,14 @@ const Reports: React.FC<IReportsProps> = () => {
         <div className={styles.subSubTitle}>No Price Group</div>
         {images
           .filter(image => (image as any).price_group_id === null)
+          .map(image => (
+            <ImageLink image={image} key={image.filename} />
+          ))}
+      </div>
+      <div>
+        <div className={styles.subSubTitle}>No Category</div>
+        {images
+          .filter(image => !image.categories?.length)
           .map(image => (
             <ImageLink image={image} key={image.filename} />
           ))}

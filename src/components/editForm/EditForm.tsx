@@ -10,6 +10,7 @@ import IImage from "../../services/imageService/IImage";
 import Dropdown from "../dropdown/Dropdown";
 import PriceService from "../../services/priceService/PriceService";
 import Loader from "../loader/Loader";
+import ICategory from "../../services/imageService/ICategory";
 
 class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
   private _imageService: ImageService;
@@ -20,9 +21,12 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
     this.state = {
       name: props.image.name || "",
       description: props.image.description || "",
+
+      categories: props.image.categories || [],
       location: props.image.location ? [props.image.location] : null,
       tags: props.image.tags || [],
 
+      suggestedCategories: [],
       suggestedLocations: [],
       suggestedTags: [],
 
@@ -33,6 +37,9 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
     };
 
     this._imageService = ImageService.getInstance();
+
+    this._removeCategory = this._removeCategory.bind(this);
+    this._removeTag = this._removeTag.bind(this);
   }
 
   public componentDidMount() {
@@ -45,6 +52,10 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
     this._imageService
       .getTags()
       .then(suggestedTags => this.setState({ suggestedTags }));
+
+    this._imageService
+      .getCategories()
+      .then(suggestedCategories => this.setState({ suggestedCategories }));
 
     PriceService.getInstance()
       .getAllPriceGroups()
@@ -72,9 +83,21 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
     this.setState({ location: null });
   };
 
+  private _addCategory = (category: Tag) => {
+    let { categories } = this.state;
+    categories = [...categories, category as ICategory];
+    this.setState({ categories });
+  };
+
+  private _removeCategory(index: number) {
+    let { categories } = this.state;
+    categories = categories.filter((_, i) => i !== index);
+    this.setState({ categories });
+  }
+
   private _addTag = (tag: Tag) => {
-    const { tags } = this.state;
-    tags.push(tag as ITag);
+    let { tags } = this.state;
+    tags = [...tags, tag as ITag];
     this.setState({ tags });
   };
 
@@ -99,13 +122,21 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
 
     try {
       const { image, mode, file, history } = this.props;
-      const { name, description, location, tags, priceGroup } = this.state;
+      const {
+        name,
+        description,
+        location,
+        categories,
+        tags,
+        priceGroup
+      } = this.state;
 
       if (mode === "upload" && file) {
         const res = await this._imageService.upload(file, {
           name,
           description,
           location: location ? location[0] : null,
+          categories,
           tags,
           priceGroup
         });
@@ -121,6 +152,7 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
           description,
           location: location ? location[0] : null,
           tags,
+          categories,
           priceGroup
         });
         window.location.reload();
@@ -143,8 +175,10 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
     const {
       name,
       description,
+      categories,
       location,
       tags,
+      suggestedCategories,
       suggestedLocations,
       suggestedTags,
       priceGroup,
@@ -172,6 +206,29 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
           />
         </label>
         <label>
+          <div className={styles.label}>Categories</div>
+        </label>
+        <div>
+          <TagsInput
+            tags={categories}
+            suggestions={
+              !categories || categories.length < 3
+                ? suggestedCategories.filter(c => !categories.includes(c))
+                : undefined
+            }
+            handleAddition={this._addCategory}
+            handleDelete={this._removeCategory}
+            placeholder={
+              !categories || categories.length < 3
+                ? "Press enter to confirm each category. Up to 3 categories."
+                : ""
+            }
+            minQueryLength={0}
+            autofocus={false}
+            maxSuggestionsLength={20}
+          />
+        </div>
+        <label>
           <div className={styles.label}>Location</div>
         </label>
         <div>
@@ -184,6 +241,7 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
             handleDelete={this._clearLocation}
             placeholder={!location ? "Press enter to confirm" : ""}
             allowNew
+            autofocus={false}
           />
         </div>
         <label>
@@ -201,6 +259,7 @@ class EditForm extends React.PureComponent<IEditFormProps, IEditFormState> {
                 : ""
             }
             allowNew
+            autofocus={false}
           />
         </div>
         <label>

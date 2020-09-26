@@ -3,8 +3,8 @@ import Database from "../index";
 import Location from "./Location";
 import Tag from "./Tag";
 import { BelongsToSetAssociationMixin, BelongsToManySetAssociationsMixin } from "sequelize";
-import Price from "./Price";
 import PriceGroup from "./PriceGroup";
+import Category from './Category';
 
 class Image extends Model {
   public id: number;
@@ -26,8 +26,10 @@ class Image extends Model {
 
   public setLocation!: BelongsToSetAssociationMixin<Location, "location">;
   public setTags!: BelongsToManySetAssociationsMixin<Tag, "tags">;
+  public setCategories!: BelongsToManySetAssociationsMixin<Category, "categories">;
   public setPriceGroup: BelongsToSetAssociationMixin<PriceGroup, "priceGroup">;
 
+  public readonly categories?: Category[];
   public readonly location?: Location;
   public readonly tags?: Tag[];
   public readonly priceGroup: PriceGroup;

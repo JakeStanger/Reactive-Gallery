@@ -7,6 +7,7 @@ import * as exifReader from "../../utils/exifReader";
 import User from "../../database/models/User";
 import PriceGroup from "../../database/models/PriceGroup";
 import * as path from "path";
+import Category from "../../database/models/Category";
 
 export const getImageThumbnail = async (req: Request, res: Response) => {
   if (req.params.filename.endsWith("webp")) {
@@ -41,6 +42,7 @@ export const getImageInfo = async (req: Request, res: Response) => {
   const image = await Image.findOne({
     where: { id: req.params.id },
     include: [
+      { model: Category, as: "categories" },
       { model: Location, as: "location" },
       { model: Tag, as: "tags" },
       { model: PriceGroup, as: "priceGroup" }
@@ -64,7 +66,7 @@ export const patchImageInfo = async (req: Request, res: Response) => {
     where: { id: req.params.id }
   });
 
-  // Update tags and location
+  // Update tags, categories and location
   const image = await Image.findOne({
     where: { id: req.params.id }
   });
@@ -74,6 +76,11 @@ export const patchImageInfo = async (req: Request, res: Response) => {
       const location = await Location.getFromObject(req.body.location);
       await image.setLocation(location);
     } else await image.setLocation(null);
+  }
+
+  if (req.body.categories !== undefined) {
+    const categories = await Category.getFromArray(req.body.categories);
+    await image.setCategories(categories);
   }
 
   if (req.body.tags !== undefined) {

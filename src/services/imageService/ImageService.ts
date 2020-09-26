@@ -1,6 +1,7 @@
 import IImage from "./IImage";
 import UserService from "../userService/UserService";
 import ITag from "./ITag";
+import ICategory from './ICategory';
 
 class ImageService {
   private static _instance: ImageService;
@@ -101,6 +102,10 @@ class ImageService {
 
     if (res.ok && res.status >= 200 && res.status < 300) return res.json();
     else return { msg: await res.text() };
+  }
+
+  public async getCategories(): Promise<ICategory[]> {
+    return fetch(`/api/category`).then(r => r.json());
   }
 
   public async getTags(): Promise<ITag[]> {

@@ -1,7 +1,7 @@
 import ILocation from "./ILocation";
 import ITag from "./ITag";
 import IPriceGroup from "../priceService/IPriceGroup";
-import IPrice from "../priceService/IPrice";
+import ICategory from './ICategory';
 
 interface IImage {
   id: number;
@@ -9,6 +9,7 @@ interface IImage {
   filename: string;
   location: ILocation | null;
   name: string;
+  categories: ICategory[];
   tags: ITag[];
   timeTaken: string;
   width: number;

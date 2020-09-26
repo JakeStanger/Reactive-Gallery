@@ -42,6 +42,8 @@ import {
 import { handleStripeWebhook } from "./routes/webhook/Webhook";
 import morgan from "morgan";
 import * as dotenv from "dotenv";
+import Category from "./database/models/Category";
+import { getCategories } from './routes/category/Categories';
 
 dotenv.config();
 
@@ -51,6 +53,7 @@ Database.get()
   .then(() => {
     User.load();
     Image.load();
+    Category.load();
     Location.load();
     Tag.load();
 
@@ -59,6 +62,12 @@ Database.get()
     Price.load();
 
     BasketItem.load();
+
+    Image.belongsToMany(Category, {
+      through: "image_category",
+      foreignKey: "image_id",
+      as: "categories"
+    });
 
     Image.belongsTo(Location, {
       foreignKey: "location_key",
@@ -74,6 +83,13 @@ Database.get()
     Image.belongsTo(PriceGroup, {
       foreignKey: "price_group_id",
       as: "priceGroup"
+    });
+
+    Category.belongsToMany(Image, {
+      through: "image_category",
+      foreignKey: "category_id",
+      as: "images",
+      constraints: false
     });
 
     Tag.belongsToMany(Image, {
@@ -104,8 +120,10 @@ Database.get()
     });
 
     if (process.env.DATABASE_DO_SYNC) {
+      console.log("syncing database...");
       Database.getConnection()
         .sync()
+        .then(() => console.log("database synced"))
         .catch(console.error);
     }
   });
@@ -169,6 +187,9 @@ router.patch("/image/:id/info", tokenChecker, patchImageInfo);
 
 router.delete("/image/:id", tokenChecker, deleteImage);
 
+// categories
+router.get('/category', getCategories);
+
 // tags and locations
 router.get("/tag", getTags);
 router.get("/location", getLocations);
@@ -195,10 +216,9 @@ router.post("/basket", tokenChecker, postBasketItem);
 router.delete("/basket", tokenChecker, clearBasket);
 router.delete("/basket/:basketItemId", tokenChecker, deleteBasketItem);
 
+// checkout
 router.get("/checkout/public", getClientPublic);
-
 router.post("/checkout/secret", tokenChecker, createCheckoutSession);
-
 router.get("/checkout/session/:sessionId", tokenChecker, getCheckoutSession);
 
 router.post(

@@ -12,7 +12,7 @@ import PriceTable from "../../pricing/priceTable/PriceTable";
 import PriceService from "../../../services/priceService/PriceService";
 import IPrice from "../../../services/priceService/IPrice";
 import { Link } from "react-router-dom";
-import Fraction from 'fraction.js';
+import Fraction from "fraction.js";
 
 const PreviewInfo: React.FC<IPreviewInfoProps> = ({ image, user, history }) => {
   const [editing, setEditing] = useState(false);
@@ -51,6 +51,12 @@ const PreviewInfo: React.FC<IPreviewInfoProps> = ({ image, user, history }) => {
 
       <div className={styles.subTitle}>{image.name}</div>
       <div className={styles.description}>{image.description}</div>
+
+      {!!image.categories?.length && (
+        <div>
+          <b>Categories</b>: {image.categories.map(c => c.name).join(", ")}
+        </div>
+      )}
 
       {image.location && (
         <div>
