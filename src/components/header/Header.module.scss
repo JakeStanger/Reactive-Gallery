@@ -8,19 +8,24 @@
   justify-content: space-between;
   flex-wrap: wrap;
 
-  @media screen and (max-width: 344px) {
-    .left, .right {
-      display: flex;
-      flex-direction: column;
-    }
-  }
-
   .link {
     padding: 5px;
     margin-right: 3px;
 
     &:last-child {
       margin-right: 0;
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    .left, .right {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .link {
+      font-size: 1.1rem;
+      padding: 10px;
     }
   }
 }
