@@ -54,7 +54,7 @@ export async function generateJpeg(filename: string, type: "marked" | "thumb") {
   const filePath = path.join(process.env.UPLOAD_PATH, type, filename);
   const jpegPath = filePath.replace(/webp$/, "jpeg")
 
-  if (fs.existsSync(jpegPath)) {
+  if (fs.existsSync(jpegPath) || filePath === jpegPath) {
     return;
   }
 
