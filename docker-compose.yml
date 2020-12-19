@@ -1,0 +1,48 @@
+version: '3.0'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    image: gallery-api
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      UPLOAD_PATH: /var/lib/gallery/photos
+      SERVER_PORT: 5200
+      SERVER_HOST: 0.0.0.0
+      DATABASE_HOST: mariadb
+      DATABASE_NAME: gallery
+      DATABASE_USER: gallery
+      DATABASE_PASSWORD: password
+      DATABASE_DIALECT: mariadb
+      DATABASE_DO_SYNC: 'false'
+    volumes:
+    - ./photos:/var/lib/gallery/photos
+    ports:
+      - 5200:5200
+    links:
+      - mariadb
+
+  mariadb:
+    image: mariadb:10.5.8
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: gallery
+      MYSQL_USER: gallery
+      MYSQL_PASSWORD: password
+    volumes:
+    - ./.docker/init:/docker-entrypoint-initdb.d
+    - mariadb-data:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+
+volumes:
+  mariadb-data:
