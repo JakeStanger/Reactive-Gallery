@@ -8,6 +8,19 @@ import UserService from "./services/userService/UserService";
 import routes from "./routes/Routes";
 import IUser from "./services/userService/IUser";
 import IPermissionSet from "./services/userService/IPermissionSet";
+import * as Sentry from "@sentry/react";
+import { Integrations } from "@sentry/tracing";
+import * as config from "./config.json";
+
+Sentry.init({
+  dsn: config.sentry,
+  autoSessionTracking: true,
+  integrations: [new Integrations.BrowserTracing()],
+
+  // We recommend adjusting this value in production, or using tracesSampler
+  // for finer control
+  tracesSampleRate: 1.0,
+});
 
 const hasPermission = (
   user: IUser | null,
@@ -52,20 +65,36 @@ async function checkWebpFeature(
 }
 
 const userService = new UserService();
-userService.init().then(async () => {
-  const user = await userService.getCurrentUser();
-  const filteredRoutes = routes.filter(
-    route => !route.permissions || hasPermission(user, route.permissions)
-  );
+userService
+  .init()
+  .then(async () => {
+    const user = await userService.getCurrentUser().catch();
+    const filteredRoutes = routes.filter(
+      route => !route.permissions || hasPermission(user, route.permissions)
+    );
 
-  const supportsWebp = await checkWebpFeature('lossy');
-  sessionStorage.setItem('supportsWebp', supportsWebp.toString());
+    Sentry.setUser({
+      username: user?.username,
+      email: user?.email
+    });
 
-  ReactDOM.render(
-    <App userService={userService} routes={filteredRoutes} />,
-    document.getElementById("root")
-  );
-});
+    const supportsWebp = await checkWebpFeature("lossy");
+    sessionStorage.setItem("supportsWebp", supportsWebp.toString());
+
+    ReactDOM.render(
+      <App userService={userService} routes={filteredRoutes} />,
+      document.getElementById("root")
+    );
+  })
+  .catch(err => {
+    document.body.innerHTML = `
+          <p style="padding: 10px;">An error occurred while trying to communicate with the server. 
+          This is most likely due to a temporary outage. 
+          Please refresh and try again.</p>
+          <p style="padding: 10px;">If the issue persists please <a href="mailto:mail@jstanger.dev">let the site administrator know</a>.</p>
+    `;
+    throw err;
+  });
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
